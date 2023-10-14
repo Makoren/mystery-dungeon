@@ -24,6 +24,9 @@ export default class MainScene extends Phaser.Scene {
     );
     const floorLayer = map.createLayer("floor", tilesetInteriorFloor);
     const wallsLayer = map.createLayer("walls", tilesetInterior);
+
+    // FIXME: Set zoom based on screen size if needed.
+    this.cameras.main.setZoom(2);
   }
 
   update() {}
