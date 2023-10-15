@@ -19,6 +19,9 @@ export default class VirtualJoystick {
     this.zone.setOrigin(0, 0);
     this.zone.setScrollFactor(0);
 
+    this.zone.setInteractive();
+    scene.input.on("gameobjectdown", this.onPointerDown, this);
+
     this.reposition(gameSize);
   }
 
@@ -46,5 +49,11 @@ export default class VirtualJoystick {
     this.zone.y = newSize.height - 300;
     this.zone.width = newSize.width;
     this.zone.height = 300;
+
+    this.zone.input.hitArea.setTo(0, 0, this.zone.width, this.zone.height);
+  }
+
+  onPointerDown(pointer, gameObject) {
+    console.log("touch");
   }
 }
