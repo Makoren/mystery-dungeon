@@ -1,5 +1,3 @@
-import VirtualJoystick from "./VirtualJoystick";
-
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super("mainScene");
@@ -8,17 +6,13 @@ export default class MainScene extends Phaser.Scene {
   create() {
     this.tilemap = this.createTilemap();
     this.player = this.createPlayer();
-    this.joystick = new VirtualJoystick(this);
+    // this.joystick = new VirtualJoystick(this);
 
     // FIXME: Set zoom based on screen size if needed.
-    //this.cameras.main.setZoom(2);
+    this.cameras.main.setZoom(2);
     this.cameras.main.startFollow(this.player, true, 1, 1, 0, -60);
 
-    this.scale.on("resize", this.onResize, this);
-  }
-
-  onResize() {
-    this.joystick.reposition();
+    this.scene.launch("uiScene");
   }
 
   createTilemap() {
