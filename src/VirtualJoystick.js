@@ -91,6 +91,18 @@ export default class VirtualJoystick {
 
     this.currentTouchPos.x = pointer.x;
     this.currentTouchPos.y = pointer.y;
-    this.knob.setPosition(this.currentTouchPos.x, this.currentTouchPos.y);
+
+    // subtract() will mutate the vector, so use a temporary one to avoid modifying currentTouchPos
+    const tempPos = this.currentTouchPos.clone();
+    const joystickMovement = tempPos.subtract(this.touchStartPos);
+
+    const joystickMovementUnit = joystickMovement.normalize();
+    const distance = this.currentTouchPos.distance(this.touchStartPos);
+
+    const newDistance = Math.min(Math.abs(distance), this.threshold);
+    const newX = this.touchStartPos.x + joystickMovementUnit.x * newDistance;
+    const newY = this.touchStartPos.y + joystickMovementUnit.y * newDistance;
+
+    this.knob.setPosition(newX, newY);
   }
 }
