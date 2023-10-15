@@ -14,15 +14,19 @@ export default class VirtualJoystick {
     this.knob = scene.add.image(0, 0, "joystickKnob");
     this.setupImage(this.knob);
 
-    this.zone = scene.add.rectangle(0, 128, 128, 300, 0xff00ff);
+    this.zone = scene.add.rectangle(0, 0, 128, 128, 0xff00ff);
     this.zone.alpha = 0.25;
     this.zone.setOrigin(0, 0);
     this.zone.setScrollFactor(0);
 
     this.zone.setInteractive();
-    scene.input.on("gameobjectdown", this.onPointerDown, this);
+    this.zone.on("pointerdown", this.onPointerDown, this);
+    scene.input.on("pointerup", this.onPointerUp, this);
 
     this.reposition(gameSize);
+
+    this.originalX = this.bg.x;
+    this.originalY = this.bg.y;
   }
 
   /**
@@ -53,7 +57,13 @@ export default class VirtualJoystick {
     this.zone.input.hitArea.setTo(0, 0, this.zone.width, this.zone.height);
   }
 
-  onPointerDown(pointer, gameObject) {
-    console.log("touch");
+  onPointerDown(pointer, localX, localY, event) {
+    this.knob.setPosition(this.zone.x + localX, this.zone.y + localY);
+    this.bg.setPosition(this.zone.x + localX, this.zone.y + localY);
+  }
+
+  onPointerUp(pointer, currentlyOver) {
+    this.knob.setPosition(this.originalX, this.originalY);
+    this.bg.setPosition(this.originalX, this.originalY);
   }
 }
