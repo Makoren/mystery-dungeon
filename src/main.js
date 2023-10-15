@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import MainScene from "./mainscene.js";
+import PreloaderScene from "./PreloaderScene.js";
+import MainScene from "./MainScene.js";
 
 /**
  * @type Phaser.Types.Core.GameConfig
@@ -8,7 +9,7 @@ const config = {
   type: Phaser.AUTO,
   width: 320,
   height: 480,
-  scene: [MainScene],
+  scene: [PreloaderScene, MainScene],
   pixelArt: true,
   scale: {
     mode: Phaser.Scale.ScaleModes.RESIZE,
