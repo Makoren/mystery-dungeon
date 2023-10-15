@@ -22,11 +22,15 @@ export default class VirtualJoystick {
     this.zone.setInteractive();
     this.zone.on("pointerdown", this.onPointerDown, this);
     scene.input.on("pointerup", this.onPointerUp, this);
+    scene.input.on("pointermove", this.onPointerMove, this);
 
     this.reposition(gameSize);
 
-    this.originalX = this.bg.x;
-    this.originalY = this.bg.y;
+    this.isDragging = false;
+    this.originalPos = new Phaser.Math.Vector2(this.bg.x, this.bg.y);
+    this.touchStartPos = this.originalPos.clone();
+    this.currentTouchPos = this.originalPos.clone();
+    this.threshold = 100;
   }
 
   /**
@@ -55,15 +59,38 @@ export default class VirtualJoystick {
     this.zone.height = 300;
 
     this.zone.input.hitArea.setTo(0, 0, this.zone.width, this.zone.height);
+
+    if (this.originalPos) {
+      this.originalPos.x = this.bg.x;
+      this.originalPos.y = this.bg.y;
+    }
   }
 
   onPointerDown(pointer, localX, localY, event) {
-    this.knob.setPosition(this.zone.x + localX, this.zone.y + localY);
-    this.bg.setPosition(this.zone.x + localX, this.zone.y + localY);
+    this.isDragging = true;
+    this.touchStartPos.x = pointer.x;
+    this.touchStartPos.y = pointer.y;
+    this.knob.setPosition(this.touchStartPos.y, this.touchStartPos.y);
+    this.bg.setPosition(this.touchStartPos.x, this.touchStartPos.y);
   }
 
   onPointerUp(pointer, currentlyOver) {
-    this.knob.setPosition(this.originalX, this.originalY);
-    this.bg.setPosition(this.originalX, this.originalY);
+    if (!this.isDragging) return;
+
+    this.isDragging = false;
+    this.touchStartPos.x = this.originalPos.x;
+    this.touchStartPos.y = this.originalPos.y;
+    this.currentTouchPos.x = this.originalPos.x;
+    this.currentTouchPos.y = this.originalPos.y;
+    this.knob.setPosition(this.originalPos.x, this.originalPos.y);
+    this.bg.setPosition(this.originalPos.x, this.originalPos.y);
+  }
+
+  onPointerMove(pointer, currentlyOver) {
+    if (!this.isDragging) return;
+
+    this.currentTouchPos.x = pointer.x;
+    this.currentTouchPos.y = pointer.y;
+    this.knob.setPosition(this.currentTouchPos.x, this.currentTouchPos.y);
   }
 }
