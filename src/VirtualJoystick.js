@@ -4,16 +4,28 @@ export default class VirtualJoystick {
    * @param {Phaser.Scene} scene The current scene.
    */
   constructor(scene) {
+    /**
+     * @private
+     */
     this.scene = scene;
 
     const gameSize = scene.scale.gameSize;
 
+    /**
+     * @private
+     */
     this.bg = scene.add.image(0, 0, "joystickBg");
     this.setupImage(this.bg);
 
+    /**
+     * @private
+     */
     this.knob = scene.add.image(0, 0, "joystickKnob");
     this.setupImage(this.knob);
 
+    /**
+     * @private
+     */
     this.zone = scene.add.zone(0, 0, 128, 128);
     this.zone.alpha = 0.25;
     this.zone.setOrigin(0, 0);
@@ -26,25 +38,55 @@ export default class VirtualJoystick {
 
     this.reposition(gameSize);
 
+    /**
+     * @private
+     */
     this.isDragging = false;
-    this.originalPosX = this.bg.x;
-    this.originalPosY = this.bg.y;
-    this.touchStartPosX = this.originalPosX;
-    this.touchStartPosY = this.originalPosY;
-    this.currentTouchPosX = this.originalPosX;
-    this.currentTouchPosY = this.originalPosY;
-    this.joystickMovementX = 0;
-    this.joystickMovementY = 0;
-    this.threshold = 100;
-  }
 
-  /**
-   * Align the image to the correct position. Used for the knob and background.
-   * @param {Phaser.GameObjects.Image} image The image to align.
-   */
-  setupImage(image) {
-    image.alpha = 0.5;
-    image.setScrollFactor(0);
+    /**
+     * @private
+     */
+    this.originalPosX = this.bg.x;
+
+    /**
+     * @private
+     */
+    this.originalPosY = this.bg.y;
+
+    /**
+     * @private
+     */
+    this.touchStartPosX = this.originalPosX;
+
+    /**
+     * @private
+     */
+    this.touchStartPosY = this.originalPosY;
+
+    /**
+     * @private
+     */
+    this.currentTouchPosX = this.originalPosX;
+
+    /**
+     * @private
+     */
+    this.currentTouchPosY = this.originalPosY;
+
+    /**
+     * @private
+     */
+    this.joystickMovementX = 0;
+
+    /**
+     * @private
+     */
+    this.joystickMovementY = 0;
+
+    /**
+     * @private
+     */
+    this.threshold = 100;
   }
 
   /**
@@ -87,6 +129,19 @@ export default class VirtualJoystick {
     return this.joystickMovementY / this.threshold;
   }
 
+  /**
+   * Align the image to the correct position. Used for the knob and background.
+   * @private
+   * @param {Phaser.GameObjects.Image} image The image to align.
+   */
+  setupImage(image) {
+    image.alpha = 0.5;
+    image.setScrollFactor(0);
+  }
+
+  /**
+   * @private
+   */
   onPointerDown(pointer, localX, localY, event) {
     this.isDragging = true;
     this.touchStartPosX = pointer.x;
@@ -95,6 +150,9 @@ export default class VirtualJoystick {
     this.bg.setPosition(this.touchStartPosX, this.touchStartPosY);
   }
 
+  /**
+   * @private
+   */
   onPointerUp(pointer, currentlyOver) {
     if (!this.isDragging) return;
 
@@ -109,6 +167,9 @@ export default class VirtualJoystick {
     this.bg.setPosition(this.originalPosX, this.originalPosY);
   }
 
+  /**
+   * @private
+   */
   onPointerMove(pointer, currentlyOver) {
     if (!this.isDragging) return;
 
@@ -142,6 +203,7 @@ export default class VirtualJoystick {
    * Limits the passed number between a minimum and maximum value, and returns the result.
    *
    * Used internally.
+   * @private
    * @param {number} num The number to clamp.
    * @param {number} min The minimum value.
    * @param {number} max The maximum value.
