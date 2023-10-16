@@ -31,6 +31,7 @@ export default class VirtualJoystick {
     this.touchStartPos = this.originalPos.clone();
     this.currentTouchPos = this.originalPos.clone();
     this.threshold = 100;
+    this.joystickMovement = Phaser.Math.Vector2.ZERO;
   }
 
   /**
@@ -66,6 +67,14 @@ export default class VirtualJoystick {
     }
   }
 
+  getXAxis() {
+    return this.joystickMovement.normalize().x;
+  }
+
+  getYAxis() {
+    return this.joystickMovement.normalize().y;
+  }
+
   onPointerDown(pointer, localX, localY, event) {
     this.isDragging = true;
     this.touchStartPos.x = pointer.x;
@@ -94,15 +103,18 @@ export default class VirtualJoystick {
 
     // subtract() will mutate the vector, so use a temporary one to avoid modifying currentTouchPos
     const tempPos = this.currentTouchPos.clone();
-    const joystickMovement = tempPos.subtract(this.touchStartPos);
+    this.joystickMovement = tempPos.subtract(this.touchStartPos);
 
-    const joystickMovementUnit = joystickMovement.normalize();
+    const joystickMovementUnit = this.joystickMovement.normalize();
     const distance = this.currentTouchPos.distance(this.touchStartPos);
 
-    const newDistance = Math.min(Math.abs(distance), this.threshold);
+    const newDistance = Math.min(distance, this.threshold);
     const newX = this.touchStartPos.x + joystickMovementUnit.x * newDistance;
     const newY = this.touchStartPos.y + joystickMovementUnit.y * newDistance;
 
     this.knob.setPosition(newX, newY);
+
+    // TODO: Output axis values between -1 and 1 to use user somehow.
+    // Consider public getXAxis and getYAxis methods.
   }
 }
