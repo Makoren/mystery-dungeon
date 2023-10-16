@@ -27,11 +27,15 @@ export default class VirtualJoystick {
     this.reposition(gameSize);
 
     this.isDragging = false;
-    this.originalPos = new Phaser.Math.Vector2(this.bg.x, this.bg.y);
-    this.touchStartPos = this.originalPos.clone();
-    this.currentTouchPos = this.originalPos.clone();
+    this.originalPosX = this.bg.x;
+    this.originalPosY = this.bg.y;
+    this.touchStartPosX = this.originalPosX;
+    this.touchStartPosY = this.originalPosY;
+    this.currentTouchPosX = this.originalPosX;
+    this.currentTouchPosY = this.originalPosY;
+    this.joystickMovementX = 0;
+    this.joystickMovementY = 0;
     this.threshold = 100;
-    this.joystickMovement = Phaser.Math.Vector2.ZERO;
   }
 
   /**
@@ -69,65 +73,81 @@ export default class VirtualJoystick {
 
   /**
    * Get the normalized X axis value of the joystick. Used for input handling.
-   *
-   * This currently does not give you a smooth value between 0 and 1 or -1.
    * @returns {number}
    */
   getXAxis() {
-    return Math.round(this.joystickMovement.normalize().x);
+    return this.joystickMovementX / this.threshold;
   }
 
   /**
    * Get the normalized Y axis value of the joystick. Used for input handling.
-   *
-   * This currently does not give you a smooth value between 0 and 1 or -1.
    * @returns {number}
    */
   getYAxis() {
-    return Math.round(this.joystickMovement.normalize().y);
+    return this.joystickMovementY / this.threshold;
   }
 
   onPointerDown(pointer, localX, localY, event) {
     this.isDragging = true;
-    this.touchStartPos.x = pointer.x;
-    this.touchStartPos.y = pointer.y;
-    this.knob.setPosition(this.touchStartPos.y, this.touchStartPos.y);
-    this.bg.setPosition(this.touchStartPos.x, this.touchStartPos.y);
+    this.touchStartPosX = pointer.x;
+    this.touchStartPosY = pointer.y;
+    this.knob.setPosition(this.touchStartPosX, this.touchStartPosY);
+    this.bg.setPosition(this.touchStartPosX, this.touchStartPosY);
   }
 
   onPointerUp(pointer, currentlyOver) {
     if (!this.isDragging) return;
 
     this.isDragging = false;
-    this.touchStartPos.x = this.originalPos.x;
-    this.touchStartPos.y = this.originalPos.y;
-    this.currentTouchPos.x = this.originalPos.x;
-    this.currentTouchPos.y = this.originalPos.y;
-    this.joystickMovement = Phaser.Math.Vector2.ZERO;
-    this.knob.setPosition(this.originalPos.x, this.originalPos.y);
-    this.bg.setPosition(this.originalPos.x, this.originalPos.y);
+    this.touchStartPosX = this.originalPosX;
+    this.touchStartPosY = this.originalPosY;
+    this.currentTouchPosX = this.originalPosX;
+    this.currentTouchPosY = this.originalPosY;
+    this.joystickMovementX = 0;
+    this.joystickMovementY = 0;
+    this.knob.setPosition(this.originalPosX, this.originalPosY);
+    this.bg.setPosition(this.originalPosX, this.originalPosY);
   }
 
   onPointerMove(pointer, currentlyOver) {
     if (!this.isDragging) return;
 
-    this.currentTouchPos.x = pointer.x;
-    this.currentTouchPos.y = pointer.y;
+    this.currentTouchPosX = pointer.x;
+    this.currentTouchPosY = pointer.y;
 
-    // subtract() will mutate the vector, so use a temporary one to avoid modifying currentTouchPos
-    const tempPos = this.currentTouchPos.clone();
-    this.joystickMovement = tempPos.subtract(this.touchStartPos);
+    const distanceX = this.currentTouchPosX - this.touchStartPosX;
+    const distanceY = this.currentTouchPosY - this.touchStartPosY;
+    const angle = Math.atan2(distanceY, distanceX);
+    const length = Math.sqrt(distanceX ** 2 + distanceY ** 2);
 
-    const joystickMovementUnit = this.joystickMovement.normalize();
-    const distance = this.currentTouchPos.distance(this.touchStartPos);
+    this.joystickMovementX = this.clamp(
+      distanceX,
+      -this.threshold,
+      this.threshold
+    );
+    this.joystickMovementY = this.clamp(
+      distanceY,
+      -this.threshold,
+      this.threshold
+    );
 
-    const newDistance = Math.min(distance, this.threshold);
-    const newX = this.touchStartPos.x + joystickMovementUnit.x * newDistance;
-    const newY = this.touchStartPos.y + joystickMovementUnit.y * newDistance;
+    const newDistance = Math.min(length, this.threshold);
+    const newX = this.touchStartPosX + Math.cos(angle) * newDistance;
+    const newY = this.touchStartPosY + Math.sin(angle) * newDistance;
 
     this.knob.setPosition(newX, newY);
+  }
 
-    // TODO: Output axis values between -1 and 1 to use user somehow.
-    // Consider public getXAxis and getYAxis methods.
+  /**
+   * Limits the passed number between a minimum and maximum value, and returns the result.
+   *
+   * Used internally.
+   * @param {number} num The number to clamp.
+   * @param {number} min The minimum value.
+   * @param {number} max The maximum value.
+   * @returns The resulting value between min and max.
+   */
+  clamp(num, min, max) {
+    return Math.min(Math.max(num, min), max);
   }
 }

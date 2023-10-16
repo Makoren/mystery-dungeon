@@ -119,7 +119,7 @@ export default class MainScene extends Phaser.Scene {
     const joystick = this.uiScene.joystick;
     console.log(joystick.getXAxis());
 
-    this.player.x += joystick.getXAxis();
-    this.player.y += joystick.getYAxis();
+    this.player.x += Math.round(joystick.getXAxis());
+    this.player.y += Math.round(joystick.getYAxis());
   }
 }
