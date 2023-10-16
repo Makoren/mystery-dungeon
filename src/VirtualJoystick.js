@@ -14,7 +14,7 @@ export default class VirtualJoystick {
     this.knob = scene.add.image(0, 0, "joystickKnob");
     this.setupImage(this.knob);
 
-    this.zone = scene.add.rectangle(0, 0, 128, 128, 0xff00ff);
+    this.zone = scene.add.zone(0, 0, 128, 128);
     this.zone.alpha = 0.25;
     this.zone.setOrigin(0, 0);
     this.zone.setScrollFactor(0);
@@ -67,12 +67,24 @@ export default class VirtualJoystick {
     }
   }
 
+  /**
+   * Get the normalized X axis value of the joystick. Used for input handling.
+   *
+   * This currently does not give you a smooth value between 0 and 1 or -1.
+   * @returns {number}
+   */
   getXAxis() {
-    return this.joystickMovement.normalize().x;
+    return Math.round(this.joystickMovement.normalize().x);
   }
 
+  /**
+   * Get the normalized Y axis value of the joystick. Used for input handling.
+   *
+   * This currently does not give you a smooth value between 0 and 1 or -1.
+   * @returns {number}
+   */
   getYAxis() {
-    return this.joystickMovement.normalize().y;
+    return Math.round(this.joystickMovement.normalize().y);
   }
 
   onPointerDown(pointer, localX, localY, event) {
@@ -91,6 +103,7 @@ export default class VirtualJoystick {
     this.touchStartPos.y = this.originalPos.y;
     this.currentTouchPos.x = this.originalPos.x;
     this.currentTouchPos.y = this.originalPos.y;
+    this.joystickMovement = Phaser.Math.Vector2.ZERO;
     this.knob.setPosition(this.originalPos.x, this.originalPos.y);
     this.bg.setPosition(this.originalPos.x, this.originalPos.y);
   }

@@ -1,3 +1,5 @@
+import UiScene from "./UiScene";
+
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super("mainScene");
@@ -6,13 +8,21 @@ export default class MainScene extends Phaser.Scene {
   create() {
     this.tilemap = this.createTilemap();
     this.player = this.createPlayer();
-    // this.joystick = new VirtualJoystick(this);
 
     // FIXME: Set zoom based on screen size if needed.
     this.cameras.main.setZoom(2);
     this.cameras.main.startFollow(this.player, true, 1, 1, 0, -60);
 
     this.scene.launch("uiScene");
+
+    /**
+     * @type {UiScene}
+     */
+    this.uiScene = this.scene.get("uiScene");
+  }
+
+  update() {
+    this.movePlayer();
   }
 
   createTilemap() {
@@ -103,5 +113,13 @@ export default class MainScene extends Phaser.Scene {
     player.play("walkDown");
 
     return player;
+  }
+
+  movePlayer() {
+    const joystick = this.uiScene.joystick;
+    console.log(joystick.getXAxis());
+
+    this.player.x += joystick.getXAxis();
+    this.player.y += joystick.getYAxis();
   }
 }

@@ -10,10 +10,6 @@ export default class UiScene extends Phaser.Scene {
     this.scale.on("resize", this.onResize, this);
   }
 
-  update() {
-    console.log(this.joystick.getYAxis());
-  }
-
   onResize(gameSize) {
     this.joystick.reposition(gameSize);
   }
