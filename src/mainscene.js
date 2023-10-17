@@ -4,11 +4,16 @@ import UiScene from "./UiScene";
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super("mainScene");
+    this.gridSize = 16;
   }
 
   create() {
     this.tilemap = this.createTilemap();
-    this.player = new Player(this);
+    this.player = new Player(
+      this,
+      this.gridSize * 5 + this.gridSize / 2,
+      this.gridSize * 3 + this.gridSize / 2
+    );
 
     // FIXME: Set zoom based on screen size if needed.
     this.cameras.main.setZoom(2);

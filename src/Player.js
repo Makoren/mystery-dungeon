@@ -9,10 +9,13 @@ const FACING_RIGHT = 3;
 export default class Player {
   /**
    * @param {Phaser.Scene} scene The current scene.
+   * @param {number} x The initial X position.
+   * @param {number} y The initial Y position.
    */
-  constructor(scene) {
+  constructor(scene, x, y) {
     this.scene = scene;
     this.facing = FACING_DOWN;
+    this.isMoving = false;
 
     scene.anims.create({
       key: "idleDown",
@@ -78,7 +81,7 @@ export default class Player {
       repeat: -1,
     });
 
-    this.sprite = scene.add.sprite(100, 100);
+    this.sprite = scene.add.sprite(x, y);
     this.sprite.play("walkDown");
 
     this.previousX = this.sprite.x;
@@ -95,26 +98,73 @@ export default class Player {
 
   /**
    * @private
-   * Move and face the player based on joystick axis.
+   * Move the player along a grid with the joystick axes.
    */
   move() {
     const joystick = this.scene.uiScene.joystick;
-    if (joystick) {
-      const xMove = Math.round(joystick.getXAxis());
-      const yMove = Math.round(joystick.getYAxis());
-      this.previousX = this.sprite.x;
-      this.previousY = this.sprite.y;
-      this.sprite.x += xMove;
-      this.sprite.y += yMove;
+    // find direction of movement with joystick axis
 
-      if (xMove > 0) {
-        this.facing = FACING_RIGHT;
-      } else if (xMove < 0) {
-        this.facing = FACING_LEFT;
-      } else if (yMove > 0) {
-        this.facing = FACING_DOWN;
-      } else if (yMove < 0) {
-        this.facing = FACING_UP;
+    // if valid, set isMoving to true
+
+    // create tween from current position to gridSize pixels in
+    // the direction of the joystick
+
+    // on complete, set isMoving back to false
+
+    // 4 direction movement
+    if (joystick && !this.isMoving) {
+      const xMove = joystick.getXAxis();
+      const yMove = joystick.getYAxis();
+      const angle = Math.atan2(yMove, xMove);
+      const angleDegrees = angle * (180 / Math.PI);
+      const length = Math.sqrt(xMove ** 2 + yMove ** 2);
+      const threshold = 0.25;
+      const tweenDuration = 250;
+
+      if (length > threshold) {
+        this.isMoving = true;
+        if (!this.scene.gridSize) {
+          console.error("No grid size defined on scene");
+          return;
+        }
+
+        if (angleDegrees < 45 && angleDegrees >= -45) {
+          // move right
+          this.scene.add.tween({
+            targets: this.sprite,
+            x: this.sprite.x + this.scene.gridSize,
+            duration: tweenDuration,
+            onComplete: () => (this.isMoving = false),
+          });
+          this.facing = FACING_RIGHT;
+        } else if (angleDegrees > -135 && angleDegrees <= -45) {
+          // move up
+          this.scene.add.tween({
+            targets: this.sprite,
+            y: this.sprite.y - this.scene.gridSize,
+            duration: tweenDuration,
+            onComplete: () => (this.isMoving = false),
+          });
+          this.facing = FACING_UP;
+        } else if (angleDegrees < 135 && angleDegrees >= 45) {
+          // move down
+          this.scene.add.tween({
+            targets: this.sprite,
+            y: this.sprite.y + this.scene.gridSize,
+            duration: tweenDuration,
+            onComplete: () => (this.isMoving = false),
+          });
+          this.facing = FACING_DOWN;
+        } else if (angleDegrees >= 135 || angleDegrees <= -135) {
+          // move left
+          this.scene.add.tween({
+            targets: this.sprite,
+            x: this.sprite.x - this.scene.gridSize,
+            duration: tweenDuration,
+            onComplete: () => (this.isMoving = false),
+          });
+          this.facing = FACING_LEFT;
+        }
       }
     }
   }
