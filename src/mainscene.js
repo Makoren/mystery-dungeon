@@ -23,7 +23,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   update() {
-    this.player.move();
+    this.player.update();
   }
 
   createTilemap() {
