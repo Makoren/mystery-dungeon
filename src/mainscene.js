@@ -16,9 +16,8 @@ export default class MainScene extends Phaser.Scene {
       10
     );
     this.enemies = [];
-    this.tilemap = this.createTilemap();
+    this.tilemap = this.createTilemap("tilemap");
 
-    // FIXME: Set zoom based on screen size if needed.
     this.cameras.main.setZoom(2);
     this.cameras.main.startFollow(this.player.sprite, true, 1, 1, 0, -60);
 
@@ -34,8 +33,13 @@ export default class MainScene extends Phaser.Scene {
     this.player.update();
   }
 
-  createTilemap() {
-    const map = this.make.tilemap({ key: "tilemap" });
+  /**
+   * Creates a tilemap from the preloaded Tiled map and returns it.
+   * @param {string} tilemapKey The key for the preloaded Tiled map.
+   * @returns The created tilemap.
+   */
+  createTilemap(tilemapKey) {
+    const map = this.make.tilemap({ key: tilemapKey });
 
     const tilesetInteriorFloor = map.addTilesetImage(
       "TilesetInteriorFloor",
@@ -50,20 +54,27 @@ export default class MainScene extends Phaser.Scene {
     const floorLayer = map.createLayer("floor", tilesetInteriorFloor);
     const wallsLayer = map.createLayer("walls", tilesetInterior);
 
+    this.spawnEnemies(map);
+
+    return map;
+  }
+
+  /**
+   * @private
+   * Used to spawn enemies when the tilemap is created.
+   */
+  spawnEnemies(map) {
     const entities = map.getObjectLayer("entities");
     entities.objects.forEach((obj) => {
       if (obj.name === "enemy") {
-        this.enemies.push(
-          new Enemy(
-            this,
-            obj.x + this.gridSize / 2,
-            obj.y + this.gridSize / 2,
-            5
-          )
+        const enemy = new Enemy(
+          this,
+          obj.x + this.gridSize / 2,
+          obj.y + this.gridSize / 2,
+          5
         );
+        this.enemies.push(enemy);
       }
     });
-
-    return map;
   }
 }

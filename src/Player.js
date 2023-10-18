@@ -18,76 +18,8 @@ export default class Player {
     this.facing = FACING_DOWN;
     this.isMoving = false;
 
-    scene.anims.create({
-      key: "playerIdleDown",
-      frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [0] }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerIdleUp",
-      frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [1] }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerIdleLeft",
-      frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [2] }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerIdleRight",
-      frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [3] }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerWalkDown",
-      frames: scene.anims.generateFrameNumbers("playerSheet", {
-        frames: [0, 4, 8, 12],
-      }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerWalkUp",
-      frames: scene.anims.generateFrameNumbers("playerSheet", {
-        frames: [1, 5, 9, 13],
-      }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerWalkLeft",
-      frames: scene.anims.generateFrameNumbers("playerSheet", {
-        frames: [2, 6, 10, 14],
-      }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
-    scene.anims.create({
-      key: "playerWalkRight",
-      frames: scene.anims.generateFrameNumbers("playerSheet", {
-        frames: [3, 7, 11, 15],
-      }),
-      frameRate: 8,
-      repeat: -1,
-    });
-
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
-    this.sprite.play("playerWalkDown");
-
-    this.previousX = this.sprite.x;
-    this.previousY = this.sprite.y;
   }
 
   /**
