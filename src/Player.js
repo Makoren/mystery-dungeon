@@ -169,7 +169,7 @@ export default class Player {
    */
   animate() {
     // if the player has moved, play walking animations
-    if (this.sprite.x !== this.previousX || this.sprite.y !== this.previousY) {
+    if (this.isMoving) {
       switch (this.facing) {
         case FACING_DOWN:
           this.sprite.play("walkDown", true);
