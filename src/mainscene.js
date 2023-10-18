@@ -1,6 +1,7 @@
 import Player from "./Player";
 import Enemy from "./Enemy";
 import UiScene from "./UiScene";
+import TurnManager from "./TurnManager";
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
@@ -9,6 +10,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.turnManager = new TurnManager();
+
     this.player = new Player(
       this,
       this.gridSize * 5 + this.gridSize / 2,
@@ -16,6 +19,9 @@ export default class MainScene extends Phaser.Scene {
       10
     );
     this.enemies = [];
+
+    this.turnManager.add(this.player);
+
     this.tilemap = this.createTilemap("tilemap");
 
     this.cameras.main.setZoom(2);
@@ -27,6 +33,8 @@ export default class MainScene extends Phaser.Scene {
      * @type {UiScene}
      */
     this.uiScene = this.scene.get("uiScene");
+
+    console.log(this.turnManager.objects);
   }
 
   update() {
@@ -73,6 +81,7 @@ export default class MainScene extends Phaser.Scene {
           obj.y + this.gridSize / 2,
           5
         );
+        this.turnManager.add(enemy);
         this.enemies.push(enemy);
       }
     });
