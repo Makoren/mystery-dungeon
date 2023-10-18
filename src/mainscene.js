@@ -1,4 +1,5 @@
 import Player from "./Player";
+import Enemy from "./Enemy";
 import UiScene from "./UiScene";
 
 export default class MainScene extends Phaser.Scene {
@@ -8,12 +9,14 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.tilemap = this.createTilemap();
     this.player = new Player(
       this,
       this.gridSize * 5 + this.gridSize / 2,
-      this.gridSize * 3 + this.gridSize / 2
+      this.gridSize * 3 + this.gridSize / 2,
+      10
     );
+    this.enemies = [];
+    this.tilemap = this.createTilemap();
 
     // FIXME: Set zoom based on screen size if needed.
     this.cameras.main.setZoom(2);
@@ -46,6 +49,20 @@ export default class MainScene extends Phaser.Scene {
 
     const floorLayer = map.createLayer("floor", tilesetInteriorFloor);
     const wallsLayer = map.createLayer("walls", tilesetInterior);
+
+    const entities = map.getObjectLayer("entities");
+    entities.objects.forEach((obj) => {
+      if (obj.name === "enemy") {
+        this.enemies.push(
+          new Enemy(
+            this,
+            obj.x + this.gridSize / 2,
+            obj.y + this.gridSize / 2,
+            5
+          )
+        );
+      }
+    });
 
     return map;
   }

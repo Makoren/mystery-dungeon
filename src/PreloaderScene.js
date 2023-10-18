@@ -18,6 +18,12 @@ export default class PreloaderScene extends Phaser.Scene {
       frameHeight: 16,
     });
 
+    // Enemy
+    this.load.spritesheet("enemySheet", "enemies/enemySheet.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+
     // Joystick
     this.load.image("joystickKnob", "joystick/knob.png");
     this.load.image("joystickBg", "joystick/bg.png");

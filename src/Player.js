@@ -11,42 +11,43 @@ export default class Player {
    * @param {Phaser.Scene} scene The current scene.
    * @param {number} x The initial X position.
    * @param {number} y The initial Y position.
+   * @param {number} depth Used for setDepth on the created sprite.
    */
-  constructor(scene, x, y) {
+  constructor(scene, x, y, depth) {
     this.scene = scene;
     this.facing = FACING_DOWN;
     this.isMoving = false;
 
     scene.anims.create({
-      key: "idleDown",
+      key: "playerIdleDown",
       frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [0] }),
       frameRate: 8,
       repeat: -1,
     });
 
     scene.anims.create({
-      key: "idleUp",
+      key: "playerIdleUp",
       frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [1] }),
       frameRate: 8,
       repeat: -1,
     });
 
     scene.anims.create({
-      key: "idleLeft",
+      key: "playerIdleLeft",
       frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [2] }),
       frameRate: 8,
       repeat: -1,
     });
 
     scene.anims.create({
-      key: "idleRight",
+      key: "playerIdleRight",
       frames: scene.anims.generateFrameNumbers("playerSheet", { frames: [3] }),
       frameRate: 8,
       repeat: -1,
     });
 
     scene.anims.create({
-      key: "walkDown",
+      key: "playerWalkDown",
       frames: scene.anims.generateFrameNumbers("playerSheet", {
         frames: [0, 4, 8, 12],
       }),
@@ -55,7 +56,7 @@ export default class Player {
     });
 
     scene.anims.create({
-      key: "walkUp",
+      key: "playerWalkUp",
       frames: scene.anims.generateFrameNumbers("playerSheet", {
         frames: [1, 5, 9, 13],
       }),
@@ -64,7 +65,7 @@ export default class Player {
     });
 
     scene.anims.create({
-      key: "walkLeft",
+      key: "playerWalkLeft",
       frames: scene.anims.generateFrameNumbers("playerSheet", {
         frames: [2, 6, 10, 14],
       }),
@@ -73,7 +74,7 @@ export default class Player {
     });
 
     scene.anims.create({
-      key: "walkRight",
+      key: "playerWalkRight",
       frames: scene.anims.generateFrameNumbers("playerSheet", {
         frames: [3, 7, 11, 15],
       }),
@@ -82,7 +83,8 @@ export default class Player {
     });
 
     this.sprite = scene.add.sprite(x, y);
-    this.sprite.play("walkDown");
+    this.sprite.setDepth(depth);
+    this.sprite.play("playerWalkDown");
 
     this.previousX = this.sprite.x;
     this.previousY = this.sprite.y;
@@ -168,23 +170,22 @@ export default class Player {
    * Animate the player based on the direction it's facing.
    */
   animate() {
-    // if the player has moved, play walking animations
     if (this.isMoving) {
       switch (this.facing) {
         case FACING_DOWN:
-          this.sprite.play("walkDown", true);
+          this.sprite.play("playerWalkDown", true);
           break;
 
         case FACING_UP:
-          this.sprite.play("walkUp", true);
+          this.sprite.play("playerWalkUp", true);
           break;
 
         case FACING_LEFT:
-          this.sprite.play("walkLeft", true);
+          this.sprite.play("playerWalkLeft", true);
           break;
 
         case FACING_RIGHT:
-          this.sprite.play("walkRight", true);
+          this.sprite.play("playerWalkRight", true);
           break;
 
         default:
@@ -193,19 +194,19 @@ export default class Player {
     } else {
       switch (this.facing) {
         case FACING_DOWN:
-          this.sprite.play("idleDown", true);
+          this.sprite.play("playerIdleDown", true);
           break;
 
         case FACING_UP:
-          this.sprite.play("idleUp", true);
+          this.sprite.play("playerIdleUp", true);
           break;
 
         case FACING_LEFT:
-          this.sprite.play("idleLeft", true);
+          this.sprite.play("playerIdleLeft", true);
           break;
 
         case FACING_RIGHT:
-          this.sprite.play("idleRight", true);
+          this.sprite.play("playerIdleRight", true);
           break;
 
         default:
