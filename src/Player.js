@@ -102,16 +102,7 @@ export default class Player {
    */
   move() {
     const joystick = this.scene.uiScene.joystick;
-    // find direction of movement with joystick axis
 
-    // if valid, set isMoving to true
-
-    // create tween from current position to gridSize pixels in
-    // the direction of the joystick
-
-    // on complete, set isMoving back to false
-
-    // 4 direction movement
     if (joystick && !this.isMoving) {
       const xMove = joystick.getXAxis();
       const yMove = joystick.getYAxis();
@@ -167,6 +158,9 @@ export default class Player {
         }
       }
     }
+
+    this.sprite.x = Math.round(this.sprite.x);
+    this.sprite.y = Math.round(this.sprite.y);
   }
 
   /**
