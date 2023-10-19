@@ -15,12 +15,19 @@ export default class TurnManager {
     this.objects.push(obj);
   }
 
+  /**
+   * @private
+   * Used internally to handle the `"nextTurn"` event.
+   */
   onNextTurn() {
     const obj = this.objects.shift();
     this.objects.push(obj);
     this.startNextTurn();
   }
 
+  /**
+   * Used to start the next turn. Called by the `"nextTurn"` event, but can also be called manually.
+   */
   startNextTurn() {
     const obj = this.objects[0];
     if (obj && obj.startTurn !== undefined) {
