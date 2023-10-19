@@ -17,9 +17,18 @@ export default class Player {
     this.scene = scene;
     this.facing = FACING_DOWN;
     this.isMoving = false;
+    this.isTurnActive = false;
 
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
+  }
+
+  /**
+   * Called externally by the turn manager to start this object's turn.
+   */
+  startTurn() {
+    this.isTurnActive = true;
+    console.log("Player start!");
   }
 
   /**
@@ -37,7 +46,7 @@ export default class Player {
   move() {
     const joystick = this.scene.uiScene.joystick;
 
-    if (joystick && !this.isMoving) {
+    if (joystick && !this.isMoving && this.isTurnActive) {
       const xMove = joystick.getXAxis();
       const yMove = joystick.getYAxis();
       const angle = Math.atan2(yMove, xMove);
@@ -47,11 +56,14 @@ export default class Player {
       const tweenDuration = 250;
 
       if (length > threshold) {
-        this.isMoving = true;
         if (!this.scene.gridSize) {
           console.error("No grid size defined on scene");
           return;
         }
+
+        this.isMoving = true;
+        this.isTurnActive = false;
+        this.scene.events.emit("nextTurn");
 
         if (angleDegrees < 45 && angleDegrees >= -45) {
           // move right

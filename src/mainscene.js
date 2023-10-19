@@ -10,7 +10,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.turnManager = new TurnManager();
+    this.turnManager = new TurnManager(this);
 
     this.player = new Player(
       this,
@@ -34,7 +34,7 @@ export default class MainScene extends Phaser.Scene {
      */
     this.uiScene = this.scene.get("uiScene");
 
-    console.log(this.turnManager.objects);
+    this.turnManager.startNextTurn();
   }
 
   update() {
