@@ -7,6 +7,11 @@ export default class MainScene extends Phaser.Scene {
   constructor() {
     super("mainScene");
     this.gridSize = 16;
+
+    /**
+     * @type {Phaser.GameObjects.GameObject[]}
+     */
+    this.obstacles = [];
   }
 
   create() {

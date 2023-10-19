@@ -1,3 +1,5 @@
+import MainScene from "./MainScene";
+
 const FACING_DOWN = 0;
 const FACING_UP = 1;
 const FACING_LEFT = 2;
@@ -8,7 +10,7 @@ const FACING_RIGHT = 3;
  */
 export default class Enemy {
   /**
-   * @param {Phaser.Scene} scene The current scene.
+   * @param {MainScene} scene The current scene.
    * @param {number} x The initial X position.
    * @param {number} y The initial Y position.
    * @param {number} depth Used for setDepth on the created sprite.
@@ -21,5 +23,6 @@ export default class Enemy {
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
     this.sprite.play("enemyWalkDown");
+    scene.obstacles.push(this.sprite);
   }
 }
