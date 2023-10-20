@@ -183,7 +183,7 @@ export default class Player {
   }
 
   /**
-   * Checks for an obstacle in front of the object.
+   * Checks for an obstacle in front of the object using its bounds. This function iterates over the scene's `obstacles`.
    * @param {number} facing Facing constant to determine direction of check.
    * @returns Whether or not an obstacle was found.
    */

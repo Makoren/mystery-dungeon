@@ -68,6 +68,7 @@ export default class MainScene extends Phaser.Scene {
     const wallsLayer = map.createLayer("walls", tilesetInterior);
 
     this.spawnEnemies(map);
+    this.spawnBounds(map);
 
     return map;
   }
@@ -75,6 +76,7 @@ export default class MainScene extends Phaser.Scene {
   /**
    * @private
    * Used to spawn enemies when the tilemap is created.
+   * @param {Phaser.Tilemaps.Tilemap} map The map to load entities from.
    */
   spawnEnemies(map) {
     const entities = map.getObjectLayer("entities");
@@ -90,5 +92,19 @@ export default class MainScene extends Phaser.Scene {
         this.enemies.push(enemy);
       }
     });
+  }
+
+  /**
+   * @private
+   * Loads the walls around the map from the `bounds` object layer.
+   * @param {Phaser.Tilemaps.Tilemap} map The map to load bounds from.
+   */
+  spawnBounds(map) {
+    const bounds = map.getObjectLayer("bounds");
+    for (const obj of bounds.objects) {
+      const b = this.add.zone(obj.x, obj.y, obj.width, obj.height);
+      b.setOrigin(0, 0);
+      this.obstacles.push(b);
+    }
   }
 }
