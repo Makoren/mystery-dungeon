@@ -13,12 +13,14 @@ export default class MainScene extends Phaser.Scene {
      * @type {Phaser.GameObjects.GameObject[]}
      */
     this.obstacles = [];
-
-    this.pfGrid = new PF.Grid(30, 20);
   }
 
   create() {
     this.turnManager = new TurnManager(this);
+
+    /**
+     * @type {Enemy[]}
+     */
     this.enemies = [];
 
     this.turnManager.add(this.player);
@@ -41,8 +43,14 @@ export default class MainScene extends Phaser.Scene {
 
     this.scene.launch("uiScene");
 
+    this.pfGrid = new PF.Grid(30, 20);
     this.setWalkableCells();
     //this.drawPathfindingGrid();
+    this.pfFinder = new PF.AStarFinder();
+
+    for (const enemy of this.enemies) {
+      enemy.move();
+    }
 
     /**
      * @type {UiScene}

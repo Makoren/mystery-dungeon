@@ -25,4 +25,24 @@ export default class Enemy {
     this.sprite.play("enemyWalkDown");
     scene.obstacles.push(this.sprite);
   }
+
+  move() {
+    // find path towards player's cell
+    // move one cell towards the player
+
+    // clone the grid since it's mutated on findPath
+    const grid = this.scene.pfGrid.clone();
+    const finder = this.scene.pfFinder;
+    const player = this.scene.player;
+
+    // get cell positions from pixel positions
+    // TODO: These are producing floats, when they should be integers for the cell positions.
+    const cellX = this.sprite.x / this.scene.gridSize;
+    const cellY = this.sprite.y / this.scene.gridSize;
+    const playerCellX = player.sprite.x / this.scene.gridSize;
+    const playerCellY = player.sprite.y / this.scene.gridSize;
+
+    //const path = finder.findPath(cellX, cellY, playerCellX, playerCellY, grid);
+    //console.log(path);
+  }
 }
