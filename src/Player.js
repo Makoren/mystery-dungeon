@@ -23,7 +23,6 @@ export default class Player {
 
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
-    scene.obstacles.push(this.sprite);
   }
 
   /**

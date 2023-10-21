@@ -36,13 +36,15 @@ export default class Enemy {
     const player = this.scene.player;
 
     // get cell positions from pixel positions
-    // TODO: These are producing floats, when they should be integers for the cell positions.
-    const cellX = this.sprite.x / this.scene.gridSize;
-    const cellY = this.sprite.y / this.scene.gridSize;
-    const playerCellX = player.sprite.x / this.scene.gridSize;
-    const playerCellY = player.sprite.y / this.scene.gridSize;
+    const cellX = Math.floor(this.sprite.x / this.scene.gridSize);
+    const cellY = Math.floor(this.sprite.y / this.scene.gridSize);
+    const playerCellX = Math.floor(player.sprite.x / this.scene.gridSize);
+    const playerCellY = Math.floor(player.sprite.y / this.scene.gridSize);
 
-    //const path = finder.findPath(cellX, cellY, playerCellX, playerCellY, grid);
-    //console.log(path);
+    // set the enemy's own cell to walkable for the cloned grid, otherwise it can't move
+    grid.setWalkableAt(cellX, cellY, true);
+
+    const path = finder.findPath(cellX, cellY, playerCellX, playerCellY, grid);
+    console.log(path);
   }
 }

@@ -45,7 +45,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.pfGrid = new PF.Grid(30, 20);
     this.setWalkableCells();
-    //this.drawPathfindingGrid();
+    // this.drawPathfindingGrid();
     this.pfFinder = new PF.AStarFinder();
 
     for (const enemy of this.enemies) {
@@ -135,7 +135,7 @@ export default class MainScene extends Phaser.Scene {
         const pixelX = i * this.gridSize + this.gridSize / 2;
         const pixelY = j * this.gridSize + this.gridSize / 2;
 
-        let isBlocked = false;
+        let isWalkable = true;
         for (const obs of this.obstacles) {
           const Rectangle = Phaser.Geom.Rectangle;
 
@@ -154,12 +154,12 @@ export default class MainScene extends Phaser.Scene {
           }
 
           if (Phaser.Geom.Rectangle.Contains(bounds, pixelX, pixelY)) {
-            isBlocked = true;
+            isWalkable = false;
             break;
           }
         }
 
-        this.pfGrid.setWalkableAt(i, j, isBlocked);
+        this.pfGrid.setWalkableAt(i, j, isWalkable);
 
         // TODO: You may need to call this every time the player's turn starts.
       }
