@@ -41,10 +41,18 @@ export default class Enemy {
     const playerCellX = Math.floor(player.sprite.x / this.scene.gridSize);
     const playerCellY = Math.floor(player.sprite.y / this.scene.gridSize);
 
-    // set the enemy's own cell to walkable for the cloned grid, otherwise it can't move
-    grid.setWalkableAt(cellX, cellY, true);
-
+    // find path and move to the next node (if it exists)
     const path = finder.findPath(cellX, cellY, playerCellX, playerCellY, grid);
-    console.log(path);
+    if (path.length > 1) {
+      const nextNode = path[1];
+      const tweenDuration = 250;
+      this.scene.add.tween({
+        targets: this.sprite,
+        x: nextNode[0] * this.scene.gridSize + this.scene.gridSize / 2,
+        y: nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2,
+        duration: tweenDuration,
+        onComplete: () => (this.isMoving = false),
+      });
+    }
   }
 }
