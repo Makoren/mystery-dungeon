@@ -26,10 +26,15 @@ export default class Enemy {
     scene.obstacles.push(this.sprite);
   }
 
-  move() {
-    // find path towards player's cell
-    // move one cell towards the player
+  startTurn() {
+    this.move();
+    this.scene.events.emit("nextTurn");
+  }
 
+  /**
+   * Find a path to the player, and then move one cell.
+   */
+  move() {
     // clone the grid since it's mutated on findPath
     const grid = this.scene.pfGrid.clone();
     const finder = this.scene.pfFinder;

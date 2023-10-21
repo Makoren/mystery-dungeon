@@ -48,10 +48,6 @@ export default class MainScene extends Phaser.Scene {
     // this.drawPathfindingGrid();
     this.pfFinder = new PF.AStarFinder();
 
-    for (const enemy of this.enemies) {
-      enemy.move();
-    }
-
     /**
      * @type {UiScene}
      */
