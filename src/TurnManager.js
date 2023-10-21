@@ -1,5 +1,7 @@
 /**
- * Used to manage the turns between objects using a queue. Each object is added manually to the queue using `add`.
+ * Used to manage the turns between objects using a queue.
+ *
+ * Each object is added manually to the queue using `add`. Emit the `"nextTurn"` event to the current scene to advance the turn manager.
  */
 export default class TurnManager {
   constructor(scene) {
@@ -27,6 +29,8 @@ export default class TurnManager {
 
   /**
    * Used to start the next turn. Called by the `"nextTurn"` event, but can also be called manually.
+   *
+   * This calls the `startTurn` function on every object in `objects`, if it exists.
    */
   startNextTurn() {
     const obj = this.objects[0];
