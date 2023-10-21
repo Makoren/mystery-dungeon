@@ -131,35 +131,44 @@ export default class MainScene extends Phaser.Scene {
         const pixelX = i * this.gridSize + this.gridSize / 2;
         const pixelY = j * this.gridSize + this.gridSize / 2;
 
-        let isWalkable = true;
-        for (const obs of this.obstacles) {
-          const Rectangle = Phaser.Geom.Rectangle;
-
-          let bounds;
-          if (obs.type === "Sprite") {
-            bounds = new Rectangle(
-              obs.x - this.gridSize / 2,
-              obs.y - this.gridSize / 2,
-              this.gridSize,
-              this.gridSize
-            );
-          } else if (obs.type === "Zone") {
-            bounds = new Rectangle(obs.x, obs.y, obs.width, obs.height);
-          } else {
-            console.error("Unknown obstacle type");
-          }
-
-          if (Phaser.Geom.Rectangle.Contains(bounds, pixelX, pixelY)) {
-            isWalkable = false;
-            break;
-          }
-        }
-
+        const isWalkable = !this.checkObstacle(pixelX, pixelY);
         this.pfGrid.setWalkableAt(i, j, isWalkable);
-
-        // TODO: You may need to call this every time the player's turn starts.
       }
     }
+  }
+
+  /**
+   * Loops over the obstacles in the scene, and checks if there is at least one at the specified position.
+   *
+   * This should not be used in place of pathfinding "walkables". It's only used for temporary blockages, like enemies that are going to move next turn. Use the walkables feature when dealing with static objects, or objects that rarely move.
+   * @param {number} posX The X position to check.
+   * @param {number} posY The Y position to check.
+   * @returns Whether or not an obstacle is at the specified position.
+   */
+  checkObstacle(posX, posY) {
+    for (const obs of this.obstacles) {
+      const Rectangle = Phaser.Geom.Rectangle;
+
+      let bounds;
+      if (obs.type === "Sprite") {
+        bounds = new Rectangle(
+          obs.x - this.gridSize / 2,
+          obs.y - this.gridSize / 2,
+          this.gridSize,
+          this.gridSize
+        );
+      } else if (obs.type === "Zone") {
+        bounds = new Rectangle(obs.x, obs.y, obs.width, obs.height);
+      } else {
+        console.error("Unknown obstacle type");
+      }
+
+      if (Phaser.Geom.Rectangle.Contains(bounds, posX, posY)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**

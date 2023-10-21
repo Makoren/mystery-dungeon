@@ -50,14 +50,23 @@ export default class Enemy {
     const path = finder.findPath(cellX, cellY, playerCellX, playerCellY, grid);
     if (path.length > 1) {
       const nextNode = path[1];
-      const tweenDuration = 250;
-      this.scene.add.tween({
-        targets: this.sprite,
-        x: nextNode[0] * this.scene.gridSize + this.scene.gridSize / 2,
-        y: nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2,
-        duration: tweenDuration,
-        onComplete: () => (this.isMoving = false),
-      });
+
+      const nextPosX =
+        nextNode[0] * this.scene.gridSize + this.scene.gridSize / 2;
+      const nextPosY =
+        nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
+
+      // check if there's another enemy in the way, otherwise keep going
+      if (!this.scene.checkObstacle(nextPosX, nextPosY)) {
+        const tweenDuration = 250;
+        this.scene.add.tween({
+          targets: this.sprite,
+          x: nextPosX,
+          y: nextPosY,
+          duration: tweenDuration,
+          onComplete: () => (this.isMoving = false),
+        });
+      }
     }
   }
 }
