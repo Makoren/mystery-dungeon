@@ -123,7 +123,7 @@ export default class MainScene extends Phaser.Scene {
     for (const obj of bounds.objects) {
       const b = this.add.zone(obj.x, obj.y, obj.width, obj.height);
       b.setOrigin(0, 0);
-      this.obstacles.push(b);
+      this.staticObstacles.push(b);
     }
   }
 

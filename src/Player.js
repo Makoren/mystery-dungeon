@@ -182,7 +182,7 @@ export default class Player {
   }
 
   /**
-   * Checks for an obstacle in front of the object using its bounds. This function iterates over the scene's `obstacles`.
+   * Checks for an obstacle in front of the object using its bounds. This function iterates over the scene's `obstacles`. Not to be confused with the `MainScene` function of the same name.
    * @param {number} facing Facing constant to determine direction of check.
    * @returns Whether or not an obstacle was found.
    */
@@ -190,7 +190,9 @@ export default class Player {
     const Rectangle = Phaser.Geom.Rectangle;
     let hitObstacle = false;
 
-    for (const obs of this.scene.obstacles) {
+    const obstacles = this.scene.obstacles.concat(this.scene.staticObstacles);
+
+    for (const obs of obstacles) {
       const bounds = obs.getBounds();
       switch (facing) {
         case FACING_DOWN:
