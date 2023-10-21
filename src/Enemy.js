@@ -57,7 +57,13 @@ export default class Enemy {
         nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
 
       // check if there's another enemy in the way, otherwise keep going
-      if (!this.scene.checkObstacle(nextPosX, nextPosY)) {
+      if (
+        !this.scene.checkGameObjectCollision(
+          nextPosX,
+          nextPosY,
+          this.scene.obstacles
+        )
+      ) {
         const tweenDuration = 250;
         this.scene.add.tween({
           targets: this.sprite,

@@ -13,6 +13,11 @@ export default class MainScene extends Phaser.Scene {
      * @type {Phaser.GameObjects.GameObject[]}
      */
     this.obstacles = [];
+
+    /**
+     * @type {Phaser.GameObjects.GameObject[]}
+     */
+    this.staticObstacles = [];
   }
 
   create() {
@@ -131,22 +136,27 @@ export default class MainScene extends Phaser.Scene {
         const pixelX = i * this.gridSize + this.gridSize / 2;
         const pixelY = j * this.gridSize + this.gridSize / 2;
 
-        const isWalkable = !this.checkObstacle(pixelX, pixelY);
+        const isWalkable = !this.checkGameObjectCollision(
+          pixelX,
+          pixelY,
+          this.staticObstacles
+        );
         this.pfGrid.setWalkableAt(i, j, isWalkable);
       }
     }
   }
 
   /**
-   * Loops over the obstacles in the scene, and checks if there is at least one at the specified position.
+   * Loops over the specified array, and checks if there is at least one game object at the specified position.
    *
-   * This should not be used in place of pathfinding "walkables". It's only used for temporary blockages, like enemies that are going to move next turn. Use the walkables feature when dealing with static objects, or objects that rarely move.
+   * While this function is used to set up pathfinding walkables, it should not be used instead of walkables for navigation. When used in isolation, it's only used for temporary blockages, like enemies that are going to move next turn. Use the walkables feature when dealing with static objects, or objects that rarely move.
    * @param {number} posX The X position to check.
    * @param {number} posY The Y position to check.
+   * @param {Phaser.GameObjects.GameObject[]} objects The array to loop over.
    * @returns Whether or not an obstacle is at the specified position.
    */
-  checkObstacle(posX, posY) {
-    for (const obs of this.obstacles) {
+  checkGameObjectCollision(posX, posY, objects) {
+    for (const obs of objects) {
       const Rectangle = Phaser.Geom.Rectangle;
 
       let bounds;
@@ -163,7 +173,7 @@ export default class MainScene extends Phaser.Scene {
         console.error("Unknown obstacle type");
       }
 
-      if (Phaser.Geom.Rectangle.Contains(bounds, posX, posY)) {
+      if (Rectangle.Contains(bounds, posX, posY)) {
         return true;
       }
     }
