@@ -24,6 +24,15 @@ export default class Enemy {
     this.sprite.setDepth(depth);
     this.sprite.play("enemyWalkDown");
     scene.obstacles.push(this.sprite);
+
+    this.targetCell = scene.add.rectangle(
+      this.sprite.x,
+      this.sprite.y,
+      this.sprite.width,
+      this.sprite.height,
+      0x00ff00
+    );
+    scene.obstacles.push(this.targetCell);
   }
 
   startTurn() {
@@ -56,23 +65,25 @@ export default class Enemy {
       const nextPosY =
         nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
 
-      // check if there's another enemy in the way, otherwise keep going
-      if (
-        !this.scene.checkGameObjectCollision(
-          nextPosX,
-          nextPosY,
-          this.scene.obstacles
-        )
-      ) {
-        const tweenDuration = 250;
-        this.scene.add.tween({
-          targets: this.sprite,
-          x: nextPosX,
-          y: nextPosY,
-          duration: tweenDuration,
-          onComplete: () => (this.isMoving = false),
-        });
-      }
+      // TODO: delayedCall is a temporary solution. Check Trello.
+      this.scene.time.delayedCall(100, () => {
+        // check if there's another enemy in the way, otherwise keep going
+        if (
+          !this.scene.checkObstacle(nextPosX, nextPosY, this.scene.obstacles)
+        ) {
+          this.targetCell.x = nextPosX;
+          this.targetCell.y = nextPosY;
+
+          const tweenDuration = 250;
+          this.scene.add.tween({
+            targets: this.sprite,
+            x: nextPosX,
+            y: nextPosY,
+            duration: tweenDuration,
+            onComplete: () => (this.isMoving = false),
+          });
+        }
+      });
     }
   }
 }

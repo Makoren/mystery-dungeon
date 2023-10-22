@@ -136,7 +136,7 @@ export default class MainScene extends Phaser.Scene {
         const pixelX = i * this.gridSize + this.gridSize / 2;
         const pixelY = j * this.gridSize + this.gridSize / 2;
 
-        const isWalkable = !this.checkGameObjectCollision(
+        const isWalkable = !this.checkObstacle(
           pixelX,
           pixelY,
           this.staticObstacles
@@ -155,25 +155,11 @@ export default class MainScene extends Phaser.Scene {
    * @param {Phaser.GameObjects.GameObject[]} objects The array to loop over.
    * @returns Whether or not an obstacle is at the specified position.
    */
-  checkGameObjectCollision(posX, posY, objects) {
+  checkObstacle(posX, posY, objects) {
     for (const obs of objects) {
       const Rectangle = Phaser.Geom.Rectangle;
 
-      let bounds;
-      if (obs.type === "Sprite") {
-        bounds = new Rectangle(
-          obs.x - this.gridSize / 2,
-          obs.y - this.gridSize / 2,
-          this.gridSize,
-          this.gridSize
-        );
-      } else if (obs.type === "Zone") {
-        bounds = new Rectangle(obs.x, obs.y, obs.width, obs.height);
-      } else {
-        console.error("Unknown obstacle type");
-      }
-
-      if (Rectangle.Contains(bounds, posX, posY)) {
+      if (Rectangle.Contains(obs.getBounds(), posX, posY)) {
         return true;
       }
     }

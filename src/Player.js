@@ -23,6 +23,15 @@ export default class Player {
 
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
+
+    this.targetCell = scene.add.rectangle(
+      this.sprite.x,
+      this.sprite.y,
+      this.sprite.width / 2,
+      this.sprite.height / 2,
+      0x00ff00
+    );
+    scene.obstacles.push(this.targetCell);
   }
 
   /**
@@ -93,35 +102,50 @@ export default class Player {
     this.isTurnActive = false;
     this.scene.events.emit("nextTurn");
 
+    let nextPosX;
+    let nextPosY;
+
     switch (facing) {
       case FACING_DOWN:
+        nextPosY = this.sprite.y + this.scene.gridSize;
+        this.targetCell.y = nextPosY;
+
         this.scene.add.tween({
           targets: this.sprite,
-          y: this.sprite.y + this.scene.gridSize,
+          y: nextPosY,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
         });
         break;
       case FACING_UP:
+        nextPosY = this.sprite.y - this.scene.gridSize;
+        this.targetCell.y = nextPosY;
+
         this.scene.add.tween({
           targets: this.sprite,
-          y: this.sprite.y - this.scene.gridSize,
+          y: nextPosY,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
         });
         break;
       case FACING_LEFT:
+        nextPosX = this.sprite.x - this.scene.gridSize;
+        this.targetCell.x = nextPosX;
+
         this.scene.add.tween({
           targets: this.sprite,
-          x: this.sprite.x - this.scene.gridSize,
+          x: nextPosX,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
         });
         break;
       case FACING_RIGHT:
+        nextPosX = this.sprite.x + this.scene.gridSize;
+        this.targetCell.x = nextPosX;
+
         this.scene.add.tween({
           targets: this.sprite,
-          x: this.sprite.x + this.scene.gridSize,
+          x: nextPosX,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
         });
