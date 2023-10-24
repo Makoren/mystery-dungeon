@@ -1,3 +1,4 @@
+import Entity from "./Entity";
 import MainScene from "./MainScene";
 
 const FACING_DOWN = 0;
@@ -8,14 +9,18 @@ const FACING_RIGHT = 3;
 /**
  * The player character, controlled by input methods.
  */
-export default class Player {
+export default class Player extends Entity {
   /**
    * @param {MainScene} scene The current scene.
    * @param {number} x The initial X position.
    * @param {number} y The initial Y position.
    * @param {number} depth Used for setDepth on the created sprite.
+   * @param {Phaser.Geom.Rectangle} rect The rectangle used for obstacle checking.
    */
   constructor(scene, x, y, depth) {
+    const rect = new Phaser.Geom.Rectangle(0, 0, 16, 16);
+    super(rect);
+
     this.scene = scene;
     this.facing = FACING_DOWN;
     this.isMoving = false;

@@ -3,6 +3,7 @@ import Player from "./Player";
 import Enemy from "./Enemy";
 import UiScene from "./UiScene";
 import TurnManager from "./TurnManager";
+import Entity from "./Entity";
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
@@ -10,12 +11,12 @@ export default class MainScene extends Phaser.Scene {
     this.gridSize = 16;
 
     /**
-     * @type {Phaser.GameObjects.GameObject[]}
+     * @type {Entity[]}
      */
     this.obstacles = [];
 
     /**
-     * @type {Phaser.GameObjects.GameObject[]}
+     * @type {Entity[]}
      */
     this.staticObstacles = [];
   }
@@ -121,9 +122,14 @@ export default class MainScene extends Phaser.Scene {
   spawnBounds(map) {
     const bounds = map.getObjectLayer("bounds");
     for (const obj of bounds.objects) {
-      const b = this.add.zone(obj.x, obj.y, obj.width, obj.height);
-      b.setOrigin(0, 0);
-      this.staticObstacles.push(b);
+      const rect = new Phaser.Geom.Rectangle(
+        obj.x,
+        obj.y,
+        obj.width,
+        obj.height
+      );
+      const wall = new Entity(rect);
+      this.staticObstacles.push(wall);
     }
   }
 
