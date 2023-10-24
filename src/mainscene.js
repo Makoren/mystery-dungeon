@@ -158,14 +158,14 @@ export default class MainScene extends Phaser.Scene {
    * While this function is used to set up pathfinding walkables, it should not be used instead of walkables for navigation. When used in isolation, it's only used for temporary blockages, like enemies that are going to move next turn. Use the walkables feature when dealing with static objects, or objects that rarely move.
    * @param {number} posX The X position to check.
    * @param {number} posY The Y position to check.
-   * @param {Phaser.GameObjects.GameObject[]} objects The array to loop over.
+   * @param {Entity[]} entities The array to loop over.
    * @returns Whether or not an obstacle is at the specified position.
    */
-  checkObstacle(posX, posY, objects) {
-    for (const obs of objects) {
+  checkObstacle(posX, posY, entities) {
+    for (const entity of entities) {
       const Rectangle = Phaser.Geom.Rectangle;
 
-      if (Rectangle.Contains(obs.getBounds(), posX, posY)) {
+      if (Rectangle.Contains(entity.rect, posX, posY)) {
         return true;
       }
     }

@@ -28,15 +28,9 @@ export default class Enemy extends Entity {
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
     this.sprite.play("enemyWalkDown");
-    scene.obstacles.push(this.sprite);
+    scene.obstacles.push(this);
 
-    this.targetCell = scene.add.rectangle(
-      this.sprite.x,
-      this.sprite.y,
-      this.sprite.width,
-      this.sprite.height,
-      0x00ff00
-    );
+    this.targetCell = new Entity(this.sprite.getBounds());
     scene.obstacles.push(this.targetCell);
   }
 

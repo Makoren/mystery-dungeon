@@ -29,13 +29,8 @@ export default class Player extends Entity {
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
 
-    this.targetCell = scene.add.rectangle(
-      this.sprite.x,
-      this.sprite.y,
-      this.sprite.width / 2,
-      this.sprite.height / 2,
-      0x00ff00
-    );
+    const targetCellRect = new Phaser.Geom.Rectangle(0, 0, 16, 16);
+    this.targetCell = new Entity(targetCellRect);
     scene.obstacles.push(this.targetCell);
   }
 
@@ -219,35 +214,35 @@ export default class Player extends Entity {
     const Rectangle = Phaser.Geom.Rectangle;
     let hitObstacle = false;
 
-    const obstacles = this.scene.obstacles.concat(this.scene.staticObstacles);
+    const entities = this.scene.obstacles.concat(this.scene.staticObstacles);
 
-    for (const obs of obstacles) {
-      const bounds = obs.getBounds();
+    for (const entity of entities) {
+      let hitEntity;
       switch (facing) {
         case FACING_DOWN:
           hitObstacle = Rectangle.Contains(
-            bounds,
+            entity.rect,
             this.sprite.x,
             this.sprite.y + this.scene.gridSize
           );
           break;
         case FACING_UP:
           hitObstacle = Rectangle.Contains(
-            bounds,
+            entity.rect,
             this.sprite.x,
             this.sprite.y - this.scene.gridSize
           );
           break;
         case FACING_LEFT:
           hitObstacle = Rectangle.Contains(
-            bounds,
+            entity.rect,
             this.sprite.x - this.scene.gridSize,
             this.sprite.y
           );
           break;
         case FACING_RIGHT:
           hitObstacle = Rectangle.Contains(
-            bounds,
+            entity.rect,
             this.sprite.x + this.scene.gridSize,
             this.sprite.y
           );
