@@ -28,9 +28,10 @@ export default class Enemy extends Entity {
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
     this.sprite.play("enemyWalkDown");
+    this.tag = "enemy";
 
     this.targetCell = new Entity(this.sprite.getBounds());
-    this.targetCell.tag = "enemy";
+    this.targetCell.parent = this;
     scene.obstacles.push(this.targetCell);
   }
 
@@ -84,7 +85,9 @@ export default class Enemy extends Entity {
           onComplete: () => (this.isMoving = false),
         });
       } else {
-        if (entity.tag === "player") {
+        if (!entity.parent) console.error("This entity has no parent");
+
+        if (entity.parent.tag === "player") {
           console.log("attack!");
         }
       }

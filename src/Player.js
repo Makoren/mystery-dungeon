@@ -28,6 +28,7 @@ export default class Player extends Entity {
 
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
+    this.tag = "player";
 
     const targetCellRect = new Phaser.Geom.Rectangle(
       this.sprite.x - this.scene.gridSize / 2,
@@ -36,7 +37,7 @@ export default class Player extends Entity {
       16
     );
     this.targetCell = new Entity(targetCellRect);
-    this.targetCell.tag = "player";
+    this.targetCell.parent = this;
     scene.obstacles.push(this.targetCell);
   }
 

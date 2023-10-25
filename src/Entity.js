@@ -15,5 +15,10 @@ export default class Entity {
      * @type {string}
      */
     this.tag = "";
+
+    /**
+     * @type {Entity}
+     */
+    this.parent = undefined;
   }
 }
