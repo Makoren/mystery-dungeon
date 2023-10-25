@@ -29,7 +29,12 @@ export default class Player extends Entity {
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
 
-    const targetCellRect = new Phaser.Geom.Rectangle(0, 0, 16, 16);
+    const targetCellRect = new Phaser.Geom.Rectangle(
+      this.sprite.x - this.scene.gridSize / 2,
+      this.sprite.y - this.scene.gridSize / 2,
+      16,
+      16
+    );
     this.targetCell = new Entity(targetCellRect);
     scene.obstacles.push(this.targetCell);
   }
@@ -39,7 +44,6 @@ export default class Player extends Entity {
    */
   startTurn() {
     this.isTurnActive = true;
-    console.log("Player start!");
   }
 
   /**
@@ -57,7 +61,7 @@ export default class Player extends Entity {
   move() {
     const joystick = this.scene.uiScene.joystick;
 
-    if (joystick && !this.isMoving /*&& this.isTurnActive*/) {
+    if (joystick && !this.isMoving && this.isTurnActive) {
       const xMove = joystick.getXAxis();
       const yMove = joystick.getYAxis();
       const angle = Math.atan2(yMove, xMove);
@@ -108,7 +112,7 @@ export default class Player extends Entity {
     switch (facing) {
       case FACING_DOWN:
         nextPosY = this.sprite.y + this.scene.gridSize;
-        this.targetCell.y = nextPosY;
+        this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
 
         this.scene.add.tween({
           targets: this.sprite,
@@ -119,7 +123,7 @@ export default class Player extends Entity {
         break;
       case FACING_UP:
         nextPosY = this.sprite.y - this.scene.gridSize;
-        this.targetCell.y = nextPosY;
+        this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
 
         this.scene.add.tween({
           targets: this.sprite,
@@ -130,7 +134,7 @@ export default class Player extends Entity {
         break;
       case FACING_LEFT:
         nextPosX = this.sprite.x - this.scene.gridSize;
-        this.targetCell.x = nextPosX;
+        this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
 
         this.scene.add.tween({
           targets: this.sprite,
@@ -141,7 +145,7 @@ export default class Player extends Entity {
         break;
       case FACING_RIGHT:
         nextPosX = this.sprite.x + this.scene.gridSize;
-        this.targetCell.x = nextPosX;
+        this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
 
         this.scene.add.tween({
           targets: this.sprite,
@@ -153,6 +157,9 @@ export default class Player extends Entity {
       default:
         break;
     }
+
+    console.log("Player:");
+    console.log(this.targetCell.rect);
   }
 
   /**

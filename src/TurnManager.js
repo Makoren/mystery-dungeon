@@ -35,6 +35,8 @@ export default class TurnManager {
   startNextTurn() {
     const obj = this.objects[0];
     if (obj && obj.startTurn !== undefined) {
+      console.log("Starting turn on:");
+      console.log(obj);
       obj.startTurn();
     }
   }

@@ -29,8 +29,6 @@ export default class MainScene extends Phaser.Scene {
      */
     this.enemies = [];
 
-    this.turnManager.add(this.player);
-
     this.tilemap = this.createTilemap("tilemap");
 
     this.tilemap.findObject("entities", (obj) => {
@@ -41,8 +39,12 @@ export default class MainScene extends Phaser.Scene {
           obj.y + this.gridSize / 2,
           10
         );
+        this.turnManager.add(this.player);
       }
     });
+
+    this.spawnEnemies(this.tilemap);
+    this.spawnBounds(this.tilemap);
 
     this.cameras.main.setZoom(2);
     this.cameras.main.startFollow(this.player.sprite, true, 1, 1, 0, -60);
@@ -59,6 +61,7 @@ export default class MainScene extends Phaser.Scene {
      */
     this.uiScene = this.scene.get("uiScene");
 
+    console.log(this.turnManager.objects);
     this.turnManager.startNextTurn();
   }
 
@@ -86,9 +89,6 @@ export default class MainScene extends Phaser.Scene {
 
     const floorLayer = map.createLayer("floor", tilesetInteriorFloor);
     const wallsLayer = map.createLayer("walls", tilesetInterior);
-
-    this.spawnEnemies(map);
-    this.spawnBounds(map);
 
     return map;
   }

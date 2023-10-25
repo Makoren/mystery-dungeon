@@ -28,7 +28,6 @@ export default class Enemy extends Entity {
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
     this.sprite.play("enemyWalkDown");
-    scene.obstacles.push(this);
 
     this.targetCell = new Entity(this.sprite.getBounds());
     scene.obstacles.push(this.targetCell);
@@ -79,6 +78,9 @@ export default class Enemy extends Entity {
           onComplete: () => (this.isMoving = false),
         });
       }
+
+      console.log("Enemy:");
+      console.log(this.targetCell.rect);
     }
   }
 }
