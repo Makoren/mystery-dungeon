@@ -141,11 +141,13 @@ export default class MainScene extends Phaser.Scene {
         const pixelX = i * this.gridSize + this.gridSize / 2;
         const pixelY = j * this.gridSize + this.gridSize / 2;
 
-        const isWalkable = !this.checkObstacle(
+        const isWalkable = this.checkObstacle(
           pixelX,
           pixelY,
           this.staticObstacles
-        );
+        )
+          ? false
+          : true;
         this.pfGrid.setWalkableAt(i, j, isWalkable);
       }
     }
@@ -158,18 +160,18 @@ export default class MainScene extends Phaser.Scene {
    * @param {number} posX The X position to check.
    * @param {number} posY The Y position to check.
    * @param {Entity[]} entities The array to loop over.
-   * @returns Whether or not an obstacle is at the specified position.
+   * @returns The entity that was found, or null if no entity was found.
    */
   checkObstacle(posX, posY, entities) {
     for (const entity of entities) {
       const Rectangle = Phaser.Geom.Rectangle;
 
       if (Rectangle.Contains(entity.rect, posX, posY)) {
-        return true;
+        return entity;
       }
     }
 
-    return false;
+    return null;
   }
 
   /**
