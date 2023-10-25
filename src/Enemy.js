@@ -30,6 +30,7 @@ export default class Enemy extends Entity {
     this.sprite.play("enemyWalkDown");
 
     this.targetCell = new Entity(this.sprite.getBounds());
+    this.targetCell.tag = "enemy";
     scene.obstacles.push(this.targetCell);
   }
 
@@ -64,7 +65,12 @@ export default class Enemy extends Entity {
         nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
 
       // check if there's another enemy in the way, otherwise keep going
-      if (!this.scene.checkObstacle(nextPosX, nextPosY, this.scene.obstacles)) {
+      const entity = this.scene.checkObstacle(
+        nextPosX,
+        nextPosY,
+        this.scene.obstacles
+      );
+      if (entity === null) {
         // subtract half of gridSize to account for origin point
         this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
         this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
@@ -77,6 +83,10 @@ export default class Enemy extends Entity {
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
         });
+      } else {
+        if (entity.tag === "player") {
+          console.log("attack!");
+        }
       }
     }
   }

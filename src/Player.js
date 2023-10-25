@@ -36,6 +36,7 @@ export default class Player extends Entity {
       16
     );
     this.targetCell = new Entity(targetCellRect);
+    this.targetCell.tag = "player";
     scene.obstacles.push(this.targetCell);
   }
 

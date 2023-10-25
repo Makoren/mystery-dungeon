@@ -10,5 +10,10 @@ export default class Entity {
      * @type {Phaser.Geom.Rectangle}
      */
     this.rect = rect;
+
+    /**
+     * @type {string}
+     */
+    this.tag = "";
   }
 }
