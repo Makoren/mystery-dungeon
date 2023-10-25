@@ -39,6 +39,8 @@ export default class Player extends Entity {
     this.targetCell = new Entity(targetCellRect);
     this.targetCell.parent = this;
     scene.obstacles.push(this.targetCell);
+
+    scene.events.on("playerAttack", this.attack, this);
   }
 
   /**
@@ -260,5 +262,26 @@ export default class Player extends Entity {
     }
 
     return hitObstacle;
+  }
+
+  attack(facing) {
+    // TODO: Add an original position to the player for the camera to follow, as well as a tween location to be confined to.
+
+    this.scene.tweens.chain({
+      targets: this.sprite,
+      tweens: [
+        {
+          y: this.sprite.y - 8,
+          duration: 200,
+          ease: "linear",
+        },
+        {
+          y: this.sprite.y + 8,
+          duration: 600,
+          ease: "linear",
+        },
+      ],
+      onComplete: () => this.scene.events.emit("nextTurn"),
+    });
   }
 }

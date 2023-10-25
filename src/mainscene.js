@@ -61,6 +61,10 @@ export default class MainScene extends Phaser.Scene {
      */
     this.uiScene = this.scene.get("uiScene");
 
+    this.input.on("pointerdown", () => {
+      this.events.emit("playerAttack");
+    });
+
     this.turnManager.startNextTurn();
   }
 
