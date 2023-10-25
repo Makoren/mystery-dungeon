@@ -64,25 +64,21 @@ export default class Enemy extends Entity {
       const nextPosY =
         nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
 
-      // TODO: delayedCall is a temporary solution. Check Trello.
-      this.scene.time.delayedCall(100, () => {
-        // check if there's another enemy in the way, otherwise keep going
-        if (
-          !this.scene.checkObstacle(nextPosX, nextPosY, this.scene.obstacles)
-        ) {
-          this.targetCell.x = nextPosX;
-          this.targetCell.y = nextPosY;
+      // check if there's another enemy in the way, otherwise keep going
+      if (!this.scene.checkObstacle(nextPosX, nextPosY, this.scene.obstacles)) {
+        // subtract half of gridSize to account for origin point
+        this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
+        this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
 
-          const tweenDuration = 250;
-          this.scene.add.tween({
-            targets: this.sprite,
-            x: nextPosX,
-            y: nextPosY,
-            duration: tweenDuration,
-            onComplete: () => (this.isMoving = false),
-          });
-        }
-      });
+        const tweenDuration = 250;
+        this.scene.add.tween({
+          targets: this.sprite,
+          x: nextPosX,
+          y: nextPosY,
+          duration: tweenDuration,
+          onComplete: () => (this.isMoving = false),
+        });
+      }
     }
   }
 }

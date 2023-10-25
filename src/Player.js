@@ -217,7 +217,6 @@ export default class Player extends Entity {
     const entities = this.scene.obstacles.concat(this.scene.staticObstacles);
 
     for (const entity of entities) {
-      let hitEntity;
       switch (facing) {
         case FACING_DOWN:
           hitObstacle = Rectangle.Contains(
