@@ -102,10 +102,6 @@ export default class Player extends Entity {
   moveInDirection(facing) {
     const tweenDuration = 250;
 
-    this.isMoving = true;
-    this.isTurnActive = false;
-    this.scene.events.emit("nextTurn");
-
     let nextPosX;
     let nextPosY;
 
@@ -158,8 +154,9 @@ export default class Player extends Entity {
         break;
     }
 
-    console.log("Player:");
-    console.log(this.targetCell.rect);
+    this.isMoving = true;
+    this.isTurnActive = false;
+    this.scene.events.emit("nextTurn");
   }
 
   /**

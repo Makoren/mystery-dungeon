@@ -61,7 +61,6 @@ export default class MainScene extends Phaser.Scene {
      */
     this.uiScene = this.scene.get("uiScene");
 
-    console.log(this.turnManager.objects);
     this.turnManager.startNextTurn();
   }
 

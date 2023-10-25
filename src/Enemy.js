@@ -78,9 +78,6 @@ export default class Enemy extends Entity {
           onComplete: () => (this.isMoving = false),
         });
       }
-
-      console.log("Enemy:");
-      console.log(this.targetCell.rect);
     }
   }
 }
