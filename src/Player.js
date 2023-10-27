@@ -277,6 +277,10 @@ export default class Player extends Entity {
   attack() {
     // player shouldn't attack if already attacking
     if (this.isAttacking || this.isMoving) return;
+
+    // TODO: This should prevent the player from attacking while enemies are attacking. Why doesn't it?
+    if (!this.isTurnActive) return;
+
     this.isAttacking = true;
 
     let moveX = 0;
