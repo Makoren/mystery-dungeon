@@ -47,7 +47,7 @@ export default class MainScene extends Phaser.Scene {
     this.spawnBounds(this.tilemap);
 
     this.cameras.main.setZoom(2);
-    this.cameras.main.startFollow(this.player.sprite, true, 1, 1, 0, -60);
+    this.cameras.main.startFollow(this.player.centerObject, true, 1, 1, 0, -60);
 
     this.scene.launch("uiScene");
 

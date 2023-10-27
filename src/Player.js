@@ -1,3 +1,4 @@
+import Position from "./Position";
 import Entity from "./Entity";
 import MainScene from "./MainScene";
 
@@ -39,6 +40,8 @@ export default class Player extends Entity {
     this.targetCell = new Entity(targetCellRect);
     this.targetCell.parent = this;
     scene.obstacles.push(this.targetCell);
+
+    this.centerObject = new Position(scene, this.sprite.x, this.sprite.y);
 
     scene.events.on("playerAttack", this.attack, this);
   }
@@ -97,6 +100,9 @@ export default class Player extends Entity {
 
     this.sprite.x = Math.round(this.sprite.x);
     this.sprite.y = Math.round(this.sprite.y);
+
+    this.centerObject.x = Math.round(this.centerObject.x);
+    this.centerObject.y = Math.round(this.centerObject.y);
   }
 
   /**
@@ -115,7 +121,7 @@ export default class Player extends Entity {
         this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
 
         this.scene.add.tween({
-          targets: this.sprite,
+          targets: [this.sprite, this.centerObject],
           y: nextPosY,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
@@ -126,7 +132,7 @@ export default class Player extends Entity {
         this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
 
         this.scene.add.tween({
-          targets: this.sprite,
+          targets: [this.sprite, this.centerObject],
           y: nextPosY,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
@@ -137,7 +143,7 @@ export default class Player extends Entity {
         this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
 
         this.scene.add.tween({
-          targets: this.sprite,
+          targets: [this.sprite, this.centerObject],
           x: nextPosX,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
@@ -148,7 +154,7 @@ export default class Player extends Entity {
         this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
 
         this.scene.add.tween({
-          targets: this.sprite,
+          targets: [this.sprite, this.centerObject],
           x: nextPosX,
           duration: tweenDuration,
           onComplete: () => (this.isMoving = false),
@@ -264,20 +270,29 @@ export default class Player extends Entity {
     return hitObstacle;
   }
 
+  /**
+   * Attacks in the specified direction. If there is an enemy in the way, damage it. Emits the `"nextTurn"` event at the end of the animation.
+   * @param {number} facing The facing constant to use for direction.
+   */
   attack(facing) {
-    // TODO: Add an original position to the player for the camera to follow, as well as a tween location to be confined to.
+    // TODO: Use a new isAttacking variable to prevent the player from attacking while attacking.
 
     this.scene.tweens.chain({
       targets: this.sprite,
       tweens: [
         {
-          y: this.sprite.y - 8,
+          y: this.sprite.y + 4,
           duration: 200,
           ease: "linear",
         },
         {
-          y: this.sprite.y + 8,
-          duration: 600,
+          y: this.sprite.y - 8,
+          duration: 100,
+          ease: "linear",
+        },
+        {
+          y: this.centerObject.y,
+          duration: 400,
           ease: "linear",
         },
       ],
