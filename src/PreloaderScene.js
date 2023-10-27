@@ -33,28 +33,24 @@ export default class PreloaderScene extends Phaser.Scene {
     this.anims.create({
       key: "playerIdleDown",
       frames: this.anims.generateFrameNumbers("playerSheet", { frames: [0] }),
-      frameRate: 8,
       repeat: -1,
     });
 
     this.anims.create({
       key: "playerIdleUp",
       frames: this.anims.generateFrameNumbers("playerSheet", { frames: [1] }),
-      frameRate: 8,
       repeat: -1,
     });
 
     this.anims.create({
       key: "playerIdleLeft",
       frames: this.anims.generateFrameNumbers("playerSheet", { frames: [2] }),
-      frameRate: 8,
       repeat: -1,
     });
 
     this.anims.create({
       key: "playerIdleRight",
       frames: this.anims.generateFrameNumbers("playerSheet", { frames: [3] }),
-      frameRate: 8,
       repeat: -1,
     });
 
@@ -91,6 +87,38 @@ export default class PreloaderScene extends Phaser.Scene {
         frames: [3, 7, 11, 15],
       }),
       frameRate: 8,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "playerAttackDown",
+      frames: this.anims.generateFrameNames("playerSheet", {
+        frames: [16],
+      }),
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "playerAttackUp",
+      frames: this.anims.generateFrameNames("playerSheet", {
+        frames: [17],
+      }),
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "playerAttackLeft",
+      frames: this.anims.generateFrameNames("playerSheet", {
+        frames: [18],
+      }),
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "playerAttackRight",
+      frames: this.anims.generateFrameNames("playerSheet", {
+        frames: [19],
+      }),
       repeat: -1,
     });
   }

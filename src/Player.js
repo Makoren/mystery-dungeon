@@ -196,7 +196,7 @@ export default class Player extends Entity {
         default:
           break;
       }
-    } else {
+    } else if (!this.isAttacking) {
       switch (this.facing) {
         case FACING_DOWN:
           this.sprite.play("playerIdleDown", true);
@@ -282,19 +282,29 @@ export default class Player extends Entity {
     let moveX = 0;
     let moveY = 0;
     const speed = 8;
+    let playerAttackAnim = "playerAttackDown";
+    let playerIdleAnim = "playerIdleDown";
 
     switch (this.facing) {
       case FACING_DOWN:
         moveY = speed;
+        playerAttackAnim = "playerAttackDown";
+        playerIdleAnim = "playerIdleDown";
         break;
       case FACING_UP:
         moveY = -speed;
+        playerAttackAnim = "playerAttackUp";
+        playerIdleAnim = "playerIdleUp";
         break;
       case FACING_LEFT:
         moveX = -speed;
+        playerAttackAnim = "playerAttackLeft";
+        playerIdleAnim = "playerIdleLeft";
         break;
       case FACING_RIGHT:
         moveX = speed;
+        playerAttackAnim = "playerAttackRight";
+        playerIdleAnim = "playerIdleRight";
         break;
       default:
         break;
@@ -314,12 +324,14 @@ export default class Player extends Entity {
           y: this.sprite.y + moveY,
           duration: 100,
           ease: "linear",
+          onStart: () => this.sprite.play(playerAttackAnim),
         },
         {
           x: this.centerObject.x,
           y: this.centerObject.y,
           duration: 400,
           ease: "linear",
+          //onStart: () => this.sprite.play(playerIdleAnim),
         },
       ],
       onComplete: () => {
