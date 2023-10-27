@@ -25,6 +25,7 @@ export default class Player extends Entity {
     this.scene = scene;
     this.facing = FACING_DOWN;
     this.isMoving = false;
+    this.isAttacking = false;
     this.isTurnActive = false;
 
     this.sprite = scene.add.sprite(x, y);
@@ -275,7 +276,10 @@ export default class Player extends Entity {
    * @param {number} facing The facing constant to use for direction.
    */
   attack(facing) {
-    // TODO: Use a new isAttacking variable to prevent the player from attacking while attacking.
+    // player shouldn't attack if already attacking
+    if (this.isAttacking) return;
+
+    this.isAttacking = true;
 
     this.scene.tweens.chain({
       targets: this.sprite,
@@ -296,7 +300,10 @@ export default class Player extends Entity {
           ease: "linear",
         },
       ],
-      onComplete: () => this.scene.events.emit("nextTurn"),
+      onComplete: () => {
+        this.scene.events.emit("nextTurn");
+        this.isAttacking = false;
+      },
     });
   }
 }
