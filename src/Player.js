@@ -69,7 +69,7 @@ export default class Player extends Entity {
   move() {
     const joystick = this.scene.uiScene.joystick;
 
-    if (joystick && !this.isMoving && this.isTurnActive) {
+    if (joystick && !this.isMoving && !this.isAttacking && this.isTurnActive) {
       const xMove = joystick.getXAxis();
       const yMove = joystick.getYAxis();
       const angle = Math.atan2(yMove, xMove);
@@ -272,29 +272,51 @@ export default class Player extends Entity {
   }
 
   /**
-   * Attacks in the specified direction. If there is an enemy in the way, damage it. Emits the `"nextTurn"` event at the end of the animation.
-   * @param {number} facing The facing constant to use for direction.
+   * Attacks in the current facing direction. If there is an enemy in the way, damage it. Emits the `"nextTurn"` event at the end of the animation.
    */
-  attack(facing) {
+  attack() {
     // player shouldn't attack if already attacking
-    if (this.isAttacking) return;
-
+    if (this.isAttacking || this.isMoving) return;
     this.isAttacking = true;
+
+    let moveX = 0;
+    let moveY = 0;
+    const speed = 8;
+
+    switch (this.facing) {
+      case FACING_DOWN:
+        moveY = speed;
+        break;
+      case FACING_UP:
+        moveY = -speed;
+        break;
+      case FACING_LEFT:
+        moveX = -speed;
+        break;
+      case FACING_RIGHT:
+        moveX = speed;
+        break;
+      default:
+        break;
+    }
 
     this.scene.tweens.chain({
       targets: this.sprite,
       tweens: [
         {
-          y: this.sprite.y + 4,
+          x: this.sprite.x - moveX,
+          y: this.sprite.y - moveY,
           duration: 200,
           ease: "linear",
         },
         {
-          y: this.sprite.y - 8,
+          x: this.sprite.x + moveX,
+          y: this.sprite.y + moveY,
           duration: 100,
           ease: "linear",
         },
         {
+          x: this.centerObject.x,
           y: this.centerObject.y,
           duration: 400,
           ease: "linear",
