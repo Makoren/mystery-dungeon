@@ -46,6 +46,9 @@ export default class Player extends Entity {
 
     scene.events.on("playerAttack", this.attack, this);
     scene.events.on("playerTurn", this.onPlayerTurn, this);
+
+    this.maxHealth = 10;
+    this.health = this.maxHealth;
   }
 
   onPlayerTurn() {

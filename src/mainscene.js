@@ -48,7 +48,10 @@ export default class MainScene extends Phaser.Scene {
     this.cameras.main.setZoom(2);
     this.cameras.main.startFollow(this.player.centerObject, true, 1, 1, 0, -60);
 
-    this.scene.launch("uiScene");
+    this.scene.launch("uiScene", {
+      currentHealth: this.player.health,
+      maxHealth: this.player.maxHealth,
+    });
 
     this.pfGrid = new PF.Grid(30, 20);
     this.setWalkableCells();
