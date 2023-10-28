@@ -26,7 +26,7 @@ export default class Player extends Entity {
     this.facing = FACING_DOWN;
     this.isMoving = false;
     this.isAttacking = false;
-    this.isTurnActive = false;
+    this.isTurnActive = true;
 
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
@@ -45,12 +45,10 @@ export default class Player extends Entity {
     this.centerObject = new Position(scene, this.sprite.x, this.sprite.y);
 
     scene.events.on("playerAttack", this.attack, this);
+    scene.events.on("playerTurn", this.onPlayerTurn, this);
   }
 
-  /**
-   * Called externally by the turn manager to start this object's turn.
-   */
-  startTurn() {
+  onPlayerTurn() {
     this.isTurnActive = true;
   }
 
@@ -167,6 +165,7 @@ export default class Player extends Entity {
 
     this.isMoving = true;
     this.isTurnActive = false;
+    this.scene.events.emit("processTurns");
     this.scene.events.emit("nextTurn");
   }
 
@@ -339,8 +338,10 @@ export default class Player extends Entity {
         },
       ],
       onComplete: () => {
-        this.scene.events.emit("nextTurn");
         this.isAttacking = false;
+        this.isTurnActive = false;
+        this.scene.events.emit("processTurns");
+        this.scene.events.emit("nextTurn");
       },
     });
   }

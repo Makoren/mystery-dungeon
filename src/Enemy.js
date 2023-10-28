@@ -25,6 +25,10 @@ export default class Enemy extends Entity {
     this.scene = scene;
     this.facing = FACING_DOWN;
 
+    this.queueState = -1; // can be 0 or 1 to represent moving or attacking
+    this.nextPosX = 0;
+    this.nextPosY = 0;
+
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
     this.sprite.play("enemyWalkDown");
@@ -37,14 +41,7 @@ export default class Enemy extends Entity {
     this.centerObject = new Position(scene, this.sprite.x, this.sprite.y);
   }
 
-  startTurn() {
-    this.move();
-  }
-
-  /**
-   * Find a path to the player, and then move one cell.
-   */
-  move() {
+  processTurn() {
     // clone the grid since it's mutated on findPath
     const grid = this.scene.pfGrid.clone();
     const finder = this.scene.pfFinder;
@@ -61,41 +58,66 @@ export default class Enemy extends Entity {
     if (path.length > 1) {
       const nextNode = path[1];
 
-      const nextPosX =
+      this.nextPosX =
         nextNode[0] * this.scene.gridSize + this.scene.gridSize / 2;
-      const nextPosY =
+      this.nextPosY =
         nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
 
       // check if there's another enemy in the way, otherwise keep going
       const entity = this.scene.checkObstacle(
-        nextPosX,
-        nextPosY,
+        this.nextPosX,
+        this.nextPosY,
         this.scene.obstacles
       );
       if (entity === null) {
         // subtract half of gridSize to account for origin point
-        this.targetCell.rect.x = nextPosX - this.scene.gridSize / 2;
-        this.targetCell.rect.y = nextPosY - this.scene.gridSize / 2;
+        this.targetCell.rect.x = this.nextPosX - this.scene.gridSize / 2;
+        this.targetCell.rect.y = this.nextPosY - this.scene.gridSize / 2;
 
-        const tweenDuration = 250;
-        this.scene.add.tween({
-          targets: [this.sprite, this.centerObject],
-          x: nextPosX,
-          y: nextPosY,
-          duration: tweenDuration,
-        });
-
-        this.scene.events.emit("nextTurn");
+        this.queueState = 0; // moving
       } else {
         if (!entity.parent) console.error("This entity has no parent");
 
         if (entity.parent.tag === "player") {
-          this.attack();
+          this.queueState = 1; // attacking
         } else {
-          this.scene.events.emit("nextTurn");
+          this.queueState = -1; // do nothing
         }
       }
+    } else {
+      this.queueState = -1; // do nothing
     }
+
+    console.log(this.queueState);
+    return this.queueState;
+  }
+
+  startTurn() {
+    console.log(`enemy with queueState of ${this.queueState} is starting`);
+    if (this.queueState === 1) {
+      this.attack();
+    } else if (this.queueState === 0) {
+      this.move();
+    } else if (this.queueState === -1) {
+      // do nothing
+    } else {
+      console.error("Invalid queueState");
+    }
+  }
+
+  /**
+   * Find a path to the player, and then move one cell.
+   */
+  move() {
+    const tweenDuration = 250;
+    this.scene.add.tween({
+      targets: [this.sprite, this.centerObject],
+      x: this.nextPosX,
+      y: this.nextPosY,
+      duration: tweenDuration,
+    });
+
+    this.scene.events.emit("nextTurn");
   }
 
   // FIXME: Identical to the player's attack function, maybe should be added to Entity instead with different args.

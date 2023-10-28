@@ -39,7 +39,6 @@ export default class MainScene extends Phaser.Scene {
           obj.y + this.gridSize / 2,
           10
         );
-        this.turnManager.add(this.player);
       }
     });
 
@@ -65,7 +64,8 @@ export default class MainScene extends Phaser.Scene {
       this.events.emit("playerAttack");
     });
 
-    this.turnManager.startNextTurn();
+    this.turnManager.processTurns();
+    //this.turnManager.performNextTurn();
   }
 
   update() {
