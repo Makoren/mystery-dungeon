@@ -94,13 +94,15 @@ export default class Player extends Entity {
           this.facing = FACING_LEFT;
         }
 
-        if (!this.checkObstacle(this.facing)) {
+        console.log("Move:");
+        const entity = this.checkObstacle(this.facing);
+        console.log(entity);
+        if (entity === null) {
           this.moveInDirection(this.facing);
         }
       }
     }
 
-    this.sprite.x = Math.round(this.sprite.x);
     this.sprite.y = Math.round(this.sprite.y);
 
     this.centerObject.x = Math.round(this.centerObject.x);
@@ -223,51 +225,67 @@ export default class Player extends Entity {
   }
 
   /**
-   * Checks for an obstacle in front of the object using its bounds. This function iterates over the scene's `obstacles`. Not to be confused with the `MainScene` function of the same name.
+   * Checks for an obstacle in front of the object using its bounds. This function iterates over the scene's `obstacles` and `staticObstacles`. Not to be confused with the `MainScene` function of the same name.
    * @param {number} facing Facing constant to determine direction of check.
-   * @returns Whether or not an obstacle was found.
+   * @returns The obstacle that was found.
    */
   checkObstacle(facing) {
     const Rectangle = Phaser.Geom.Rectangle;
-    let hitObstacle = false;
+    let hitObstacle = null;
 
     const entities = this.scene.obstacles.concat(this.scene.staticObstacles);
 
     for (const entity of entities) {
       switch (facing) {
         case FACING_DOWN:
-          hitObstacle = Rectangle.Contains(
-            entity.rect,
-            this.sprite.x,
-            this.sprite.y + this.scene.gridSize
-          );
+          if (
+            Rectangle.Contains(
+              entity.rect,
+              this.sprite.x,
+              this.sprite.y + this.scene.gridSize
+            )
+          ) {
+            hitObstacle = entity;
+          }
           break;
         case FACING_UP:
-          hitObstacle = Rectangle.Contains(
-            entity.rect,
-            this.sprite.x,
-            this.sprite.y - this.scene.gridSize
-          );
+          if (
+            Rectangle.Contains(
+              entity.rect,
+              this.sprite.x,
+              this.sprite.y - this.scene.gridSize
+            )
+          ) {
+            hitObstacle = entity;
+          }
           break;
         case FACING_LEFT:
-          hitObstacle = Rectangle.Contains(
-            entity.rect,
-            this.sprite.x - this.scene.gridSize,
-            this.sprite.y
-          );
+          if (
+            Rectangle.Contains(
+              entity.rect,
+              this.sprite.x - this.scene.gridSize,
+              this.sprite.y
+            )
+          ) {
+            hitObstacle = entity;
+          }
           break;
         case FACING_RIGHT:
-          hitObstacle = Rectangle.Contains(
-            entity.rect,
-            this.sprite.x + this.scene.gridSize,
-            this.sprite.y
-          );
+          if (
+            Rectangle.Contains(
+              entity.rect,
+              this.sprite.x + this.scene.gridSize,
+              this.sprite.y
+            )
+          ) {
+            hitObstacle = entity;
+          }
           break;
         default:
           break;
       }
 
-      if (hitObstacle) break;
+      if (hitObstacle !== null) break;
     }
 
     return hitObstacle;
@@ -279,8 +297,6 @@ export default class Player extends Entity {
   attack() {
     // player shouldn't attack if already attacking
     if (this.isAttacking || this.isMoving) return;
-
-    // TODO: This should prevent the player from attacking while enemies are attacking. Why doesn't it?
     if (!this.isTurnActive) return;
 
     this.isAttacking = true;
@@ -316,6 +332,10 @@ export default class Player extends Entity {
         break;
     }
 
+    console.log("Attack:");
+    const entityToAttack = this.checkObstacle(self.facing);
+    console.log(entityToAttack);
+
     this.scene.tweens.chain({
       targets: this.sprite,
       tweens: [
@@ -337,15 +357,28 @@ export default class Player extends Entity {
           y: this.centerObject.y,
           duration: 400,
           ease: "linear",
-          //onStart: () => this.sprite.play(playerIdleAnim),
         },
       ],
       onComplete: () => {
         this.isAttacking = false;
         this.isTurnActive = false;
+
+        console.log(entityToAttack);
+        if (entityToAttack !== null && entityToAttack.parent.tag === "enemy") {
+          console.log("enemy damaged!");
+        }
+
         this.scene.events.emit("processTurns");
         this.scene.events.emit("nextTurn");
       },
     });
   }
 }
+
+/*
+TODO: The player has a checkObstacle function that checks for an obstacle in the direction the player is facing. This is done by checking for a rectangle gridSize pixels away from the player.
+
+Both move() and attack() invoke this function under seemingly identical conditions, yet the one called in move() returns an entity while the one in attack() returns null.
+
+Why does this happen?
+*/
