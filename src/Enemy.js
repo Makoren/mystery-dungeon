@@ -63,6 +63,13 @@ export default class Enemy extends Entity {
       this.nextPosY =
         nextNode[1] * this.scene.gridSize + this.scene.gridSize / 2;
 
+      this.setFacing(
+        this.sprite.x,
+        this.sprite.y,
+        this.nextPosX,
+        this.nextPosY
+      );
+
       // check if there's another enemy in the way, otherwise keep going
       const entity = this.scene.checkObstacle(
         this.nextPosX,
@@ -101,6 +108,27 @@ export default class Enemy extends Entity {
       // do nothing
     } else {
       console.error("Invalid queueState");
+    }
+  }
+
+  /**
+   * Set `facing` to a value based on the direction from a point to another point.
+   * @param {number} startX The starting X position.
+   * @param {number} startY The starting Y position.
+   * @param {number} endX The ending X position.
+   * @param {number} endY The ending Y position.
+   */
+  setFacing(startX, startY, endX, endY) {
+    if (startX > endX) {
+      this.facing = FACING_LEFT;
+    } else if (startX < endX) {
+      this.facing = FACING_RIGHT;
+    } else if (startY > endY) {
+      this.facing = FACING_UP;
+    } else if (startY < endY) {
+      this.facing = FACING_DOWN;
+    } else {
+      console.error("Invalid positions");
     }
   }
 
