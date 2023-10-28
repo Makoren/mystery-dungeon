@@ -86,14 +86,13 @@ export default class Enemy extends Entity {
       }
     } else {
       this.queueState = -1; // do nothing
+      console.log("no path found");
     }
 
-    console.log(this.queueState);
     return this.queueState;
   }
 
   startTurn() {
-    console.log(`enemy with queueState of ${this.queueState} is starting`);
     if (this.queueState === 1) {
       this.attack();
     } else if (this.queueState === 0) {

@@ -63,9 +63,6 @@ export default class MainScene extends Phaser.Scene {
     this.input.on("pointerdown", () => {
       this.events.emit("playerAttack");
     });
-
-    this.turnManager.processTurns();
-    //this.turnManager.performNextTurn();
   }
 
   update() {

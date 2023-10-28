@@ -54,7 +54,6 @@ export default class TurnManager {
 
     // all attacking enemies act first
     this.acting = attacking.concat(moving);
-    console.log(this.objects);
   }
 
   /**
@@ -71,17 +70,3 @@ export default class TurnManager {
     }
   }
 }
-
-/*
-
-1. Player moves or attacks, both processing and performing
-2. Enemies process their turns, create a "moving" and "attacking" queue
-3. Attacking enemies perform turns first
-4. Moving enemies act
-5. When both queues are empty, player turn starts again
-
-Processing a turn means checking to see if the entity is moving or attacking, and then adding itself to the appropriate queue. Performing is acting out that turn.
-
-TODO: Enemies are trying to move into their own target cells. Probably should have an "owner" check of some kind. After that, I think we can clean up console.logs.
-
-*/
