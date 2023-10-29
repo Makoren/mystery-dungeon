@@ -27,6 +27,7 @@ export default class Player extends Entity {
     this.isMoving = false;
     this.isAttacking = false;
     this.isTurnActive = true;
+    this.isDestroyed = false;
 
     this.sprite = scene.add.sprite(x, y);
     this.sprite.setDepth(depth);
@@ -40,7 +41,7 @@ export default class Player extends Entity {
     );
     this.targetCell = new Entity(targetCellRect);
     this.targetCell.parent = this;
-    scene.obstacles.push(this.targetCell);
+    this.targetCellIndex = scene.obstacles.push(this.targetCell) - 1;
 
     this.centerObject = new Position(scene, this.sprite.x, this.sprite.y);
 
@@ -59,6 +60,8 @@ export default class Player extends Entity {
    * Moves and animates the player.
    */
   update() {
+    if (this.isDestroyed) return;
+
     this.move();
     this.animate();
   }
@@ -300,6 +303,7 @@ export default class Player extends Entity {
     // player shouldn't attack if already attacking
     if (this.isAttacking || this.isMoving) return;
     if (!this.isTurnActive) return;
+    if (this.isDestroyed) return;
 
     this.isAttacking = true;
 
@@ -385,7 +389,16 @@ export default class Player extends Entity {
     this.scene.uiScene.events.emit("updateHealth", this.health, this.maxHealth);
   }
 
+  /**
+   * Destroy each component of the player, making it inactive.
+   */
   destroy() {
-    console.log("oh no! im dead!");
+    this.isDestroyed = true;
+    this.scene.obstacles.splice(this.targetCellIndex, 1);
+    this.sprite.destroy();
+    this.centerObject.destroy();
+    this.targetCell.rect = undefined;
+    this.targetCell.parent = undefined;
+    this.targetCell = undefined;
   }
 }
