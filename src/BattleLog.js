@@ -12,6 +12,9 @@ export default class BattleLog {
     /** @type {Phaser.GameObjects.Text[]} */
     this.textObjects = [];
 
+    this.panel = scene.add.rectangle(0, 0, 520, 300, 0x000000);
+    this.panel.alpha = 0.3;
+
     for (let i = 0; i < 5; i++) {
       const obj = scene.add.text(20, 20 + 24 * i, "");
       this.textObjects.push(obj);
