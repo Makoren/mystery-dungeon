@@ -26,6 +26,7 @@ export default class Enemy extends Entity {
     this.facing = FACING_DOWN;
 
     this.queueState = -1; // can be 0 or 1 to represent moving or attacking
+    this.attackTarget = undefined;
     this.nextPosX = 0;
     this.nextPosY = 0;
 
@@ -87,6 +88,7 @@ export default class Enemy extends Entity {
 
         if (entity.parent.tag === "player") {
           this.queueState = 1; // attacking
+          this.attackTarget = entity;
         } else {
           this.queueState = -1; // do nothing
         }
@@ -184,6 +186,7 @@ export default class Enemy extends Entity {
           y: this.sprite.y + moveY,
           duration: 100,
           ease: "linear",
+          onComplete: () => this.attackEntity(this.attackTarget),
         },
         {
           x: this.centerObject.x,
@@ -197,6 +200,12 @@ export default class Enemy extends Entity {
         this.scene.events.emit("nextTurn");
       },
     });
+  }
+
+  attackEntity(entity) {
+    if (entity !== undefined && entity.parent.tag === "player") {
+      entity.parent.damage(1, () => entity.parent.destroy());
+    }
   }
 
   /**

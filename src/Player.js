@@ -380,6 +380,11 @@ export default class Player extends Entity {
     }
   }
 
+  damage(amount, deathCallback) {
+    super.damage(amount, deathCallback);
+    this.scene.uiScene.events.emit("updateHealth", this.health, this.maxHealth);
+  }
+
   destroy() {
     console.log("oh no! im dead!");
   }
