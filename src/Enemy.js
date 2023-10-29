@@ -155,6 +155,8 @@ export default class Enemy extends Entity {
     let moveY = 0;
     const speed = 8;
 
+    this.scene.uiScene.battleLog.add("Enemy attacks!");
+
     switch (this.facing) {
       case FACING_DOWN:
         moveY = speed;
@@ -208,10 +210,16 @@ export default class Enemy extends Entity {
     }
   }
 
+  damage(amount, deathCallback) {
+    this.scene.uiScene.battleLog.add(`Enemy took ${amount} damage!`);
+    super.damage(amount, deathCallback);
+  }
+
   /**
    * Destroy each component of the enemy, making it inactive.
    */
   destroy() {
+    this.scene.uiScene.battleLog.add(`Enemy has been defeated!`);
     this.scene.turnManager.remove(this);
     this.scene.obstacles.splice(this.targetCellIndex, 1);
     this.sprite.destroy();

@@ -1,3 +1,4 @@
+import BattleLog from "./BattleLog";
 import VirtualJoystick from "./VirtualJoystick";
 
 export default class UiScene extends Phaser.Scene {
@@ -9,6 +10,7 @@ export default class UiScene extends Phaser.Scene {
     const gameSize = this.scale.gameSize;
 
     this.joystick = new VirtualJoystick(this);
+    this.battleLog = new BattleLog(this);
 
     // FIXME: the coordinates for the BG are way off for some reason
     this.healthLabelBg = this.add.rectangle(0, 20, 100, 100, 0x000000);

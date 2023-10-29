@@ -339,6 +339,7 @@ export default class Player extends Entity {
     }
 
     const entityToAttack = this.checkObstacle(this.facing);
+    this.scene.uiScene.battleLog.add("Player attacks!");
 
     this.scene.tweens.chain({
       targets: this.sprite,
@@ -385,6 +386,7 @@ export default class Player extends Entity {
   }
 
   damage(amount, deathCallback) {
+    this.scene.uiScene.battleLog.add(`Player took ${amount} damage!`);
     super.damage(amount, deathCallback);
     this.scene.uiScene.events.emit("updateHealth", this.health, this.maxHealth);
   }
@@ -393,6 +395,7 @@ export default class Player extends Entity {
    * Destroy each component of the player, making it inactive.
    */
   destroy() {
+    this.scene.uiScene.battleLog.add(`Player has been defeated!`);
     this.isDestroyed = true;
     this.scene.obstacles.splice(this.targetCellIndex, 1);
     this.sprite.destroy();
