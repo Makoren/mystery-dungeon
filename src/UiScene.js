@@ -12,12 +12,11 @@ export default class UiScene extends Phaser.Scene {
     this.joystick = new VirtualJoystick(this);
     this.battleLog = new BattleLog(this);
 
-    // FIXME: the coordinates for the BG are way off for some reason
-    this.healthLabelBg = this.add.rectangle(0, 20, 100, 100, 0x000000);
-    this.healthLabelBg.alpha = 0.3;
-    this.healthLabelBg.setOrigin(0.5, 0.5);
-    this.healthLabel = this.add.text(0, 40, "3/3");
-    this.healthLabel.setOrigin(0.5, 0.5);
+    this.healthLabelBg = this.add.rectangle(0, 0, 100, 60, 0x000000);
+    this.healthLabelBg.alpha = 0.1;
+    this.healthLabelBg.setOrigin(1, 0);
+    this.healthLabel = this.add.text(0, 20, "3/3");
+    this.healthLabel.setOrigin(1, 0);
 
     this.scale.on("resize", this.onResize, this);
     this.onResize(gameSize);
@@ -32,8 +31,8 @@ export default class UiScene extends Phaser.Scene {
   onResize(gameSize) {
     this.joystick.reposition(gameSize);
 
-    this.healthLabel.x = gameSize.width / 2;
-    this.healthLabelBg.x = gameSize.width / 2;
+    this.healthLabel.x = gameSize.width - 20;
+    this.healthLabelBg.x = gameSize.width;
   }
 
   /**
@@ -41,6 +40,6 @@ export default class UiScene extends Phaser.Scene {
    * @param {number} maxHealth
    */
   onUpdateHealth(currentHealth, maxHealth) {
-    this.healthLabel.text = `${currentHealth}/${maxHealth}`;
+    this.healthLabel.text = `HP: ${currentHealth}/${maxHealth}`;
   }
 }

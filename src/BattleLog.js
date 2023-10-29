@@ -13,7 +13,7 @@ export default class BattleLog {
     this.textObjects = [];
 
     this.panel = scene.add.rectangle(0, 0, 520, 300, 0x000000);
-    this.panel.alpha = 0.3;
+    this.panel.alpha = 0.1;
 
     for (let i = 0; i < 5; i++) {
       const obj = scene.add.text(20, 20 + 24 * i, "");
