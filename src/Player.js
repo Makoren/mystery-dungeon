@@ -380,7 +380,11 @@ export default class Player extends Entity {
    * @param {Entity} entity The entity to attack.
    */
   attackEntity(entity) {
-    if (entity !== null && entity.parent.tag === "enemy") {
+    if (
+      entity !== null &&
+      entity.parent !== undefined &&
+      entity.parent.tag === "enemy"
+    ) {
       entity.parent.damage(1, () => entity.parent.destroy());
     }
   }
