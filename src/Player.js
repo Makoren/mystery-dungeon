@@ -236,6 +236,7 @@ export default class Player extends Entity {
     for (const entity of entities) {
       switch (facing) {
         case FACING_DOWN:
+          if (!entity || !entity.rect) break;
           if (
             Rectangle.Contains(
               entity.rect,
@@ -247,6 +248,7 @@ export default class Player extends Entity {
           }
           break;
         case FACING_UP:
+          if (!entity || !entity.rect) break;
           if (
             Rectangle.Contains(
               entity.rect,
@@ -258,6 +260,7 @@ export default class Player extends Entity {
           }
           break;
         case FACING_LEFT:
+          if (!entity || !entity.rect) break;
           if (
             Rectangle.Contains(
               entity.rect,
@@ -269,6 +272,7 @@ export default class Player extends Entity {
           }
           break;
         case FACING_RIGHT:
+          if (!entity || !entity.rect) break;
           if (
             Rectangle.Contains(
               entity.rect,
@@ -347,14 +351,7 @@ export default class Player extends Entity {
           duration: 100,
           ease: "linear",
           onStart: () => this.sprite.play(playerAttackAnim),
-          onComplete: () => {
-            if (
-              entityToAttack !== null &&
-              entityToAttack.parent.tag === "enemy"
-            ) {
-              console.log("enemy damaged!");
-            }
-          },
+          onComplete: () => this.attackEntity(entityToAttack),
         },
         {
           x: this.centerObject.x,
@@ -372,12 +369,18 @@ export default class Player extends Entity {
       },
     });
   }
+
+  /**
+   * Attack a specific entity, which in turn calls its damage() method.
+   * @param {Entity} entity The entity to attack.
+   */
+  attackEntity(entity) {
+    if (entity !== null && entity.parent.tag === "enemy") {
+      entity.parent.damage(1, () => entity.parent.destroy());
+    }
+  }
+
+  destroy() {
+    console.log("oh no! im dead!");
+  }
 }
-
-/*
-TODO: The player has a checkObstacle function that checks for an obstacle in the direction the player is facing. This is done by checking for a rectangle gridSize pixels away from the player.
-
-Both move() and attack() invoke this function under seemingly identical conditions, yet the one called in move() returns an entity while the one in attack() returns null.
-
-Why does this happen?
-*/

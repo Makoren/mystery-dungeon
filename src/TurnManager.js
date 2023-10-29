@@ -21,6 +21,22 @@ export default class TurnManager {
   }
 
   /**
+   * Removes the specified object from all turn manager arrays.
+   * @param {any} obj The object to remove.
+   */
+  remove(obj) {
+    const i = this.objects.indexOf(obj);
+    if (i !== -1) {
+      this.objects.splice(i, 1);
+    }
+
+    const j = this.acting.indexOf(obj);
+    if (i !== -1) {
+      this.acting.splice(j, 1);
+    }
+  }
+
+  /**
    * @private
    * Used internally to handle the `"nextTurn"` event.
    */

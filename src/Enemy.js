@@ -36,7 +36,7 @@ export default class Enemy extends Entity {
 
     this.targetCell = new Entity(this.sprite.getBounds());
     this.targetCell.parent = this;
-    scene.obstacles.push(this.targetCell);
+    this.targetCellIndex = scene.obstacles.push(this.targetCell) - 1;
 
     this.centerObject = new Position(scene, this.sprite.x, this.sprite.y);
   }
@@ -197,5 +197,18 @@ export default class Enemy extends Entity {
         this.scene.events.emit("nextTurn");
       },
     });
+  }
+
+  /**
+   * Destroy each component of the enemy, making it inactive.
+   */
+  destroy() {
+    this.scene.turnManager.remove(this);
+    this.scene.obstacles.splice(this.targetCellIndex, 1);
+    this.sprite.destroy();
+    this.centerObject.destroy();
+    this.targetCell.rect = undefined;
+    this.targetCell.parent = undefined;
+    this.targetCell = undefined;
   }
 }

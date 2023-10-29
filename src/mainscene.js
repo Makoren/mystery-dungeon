@@ -170,6 +170,8 @@ export default class MainScene extends Phaser.Scene {
     for (const entity of entities) {
       const Rectangle = Phaser.Geom.Rectangle;
 
+      if (!entity || !entity.rect) return null;
+
       if (Rectangle.Contains(entity.rect, posX, posY)) {
         return entity;
       }
