@@ -94,9 +94,7 @@ export default class Player extends Entity {
           this.facing = FACING_LEFT;
         }
 
-        console.log("Move:");
         const entity = this.checkObstacle(this.facing);
-        console.log(entity);
         if (entity === null) {
           this.moveInDirection(this.facing);
         }
@@ -332,9 +330,7 @@ export default class Player extends Entity {
         break;
     }
 
-    console.log("Attack:");
-    const entityToAttack = this.checkObstacle(self.facing);
-    console.log(entityToAttack);
+    const entityToAttack = this.checkObstacle(this.facing);
 
     this.scene.tweens.chain({
       targets: this.sprite,
@@ -351,6 +347,14 @@ export default class Player extends Entity {
           duration: 100,
           ease: "linear",
           onStart: () => this.sprite.play(playerAttackAnim),
+          onComplete: () => {
+            if (
+              entityToAttack !== null &&
+              entityToAttack.parent.tag === "enemy"
+            ) {
+              console.log("enemy damaged!");
+            }
+          },
         },
         {
           x: this.centerObject.x,
@@ -362,11 +366,6 @@ export default class Player extends Entity {
       onComplete: () => {
         this.isAttacking = false;
         this.isTurnActive = false;
-
-        console.log(entityToAttack);
-        if (entityToAttack !== null && entityToAttack.parent.tag === "enemy") {
-          console.log("enemy damaged!");
-        }
 
         this.scene.events.emit("processTurns");
         this.scene.events.emit("nextTurn");
