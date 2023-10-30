@@ -10,24 +10,21 @@ export default class MainScene extends Phaser.Scene {
     super("mainScene");
     this.gridSize = 16;
 
-    /**
-     * @type {Entity[]}
-     */
+    /** @type {Entity[]} */
     this.obstacles = [];
 
-    /**
-     * @type {Entity[]}
-     */
+    /** @type {Entity[]} */
     this.staticObstacles = [];
+
+    /** @type {Enemy[]} */
+    this.enemies = [];
+
+    /** @type {Phaser.GameObjects.GameObject[]} */
+    this.depthSortArray = [];
   }
 
   create() {
     this.turnManager = new TurnManager(this);
-
-    /**
-     * @type {Enemy[]}
-     */
-    this.enemies = [];
 
     this.tilemap = this.createTilemap("tilemap");
 
@@ -39,6 +36,7 @@ export default class MainScene extends Phaser.Scene {
           obj.y + this.gridSize / 2,
           10
         );
+        this.depthSortArray.push(this.player.sprite);
       }
     });
 
@@ -55,12 +53,9 @@ export default class MainScene extends Phaser.Scene {
 
     this.pfGrid = new PF.Grid(30, 20);
     this.setWalkableCells();
-    // this.drawPathfindingGrid();
     this.pfFinder = new PF.AStarFinder();
 
-    /**
-     * @type {UiScene}
-     */
+    /** @type {UiScene} */
     this.uiScene = this.scene.get("uiScene");
 
     this.input.on("pointerdown", () => {
@@ -70,6 +65,10 @@ export default class MainScene extends Phaser.Scene {
 
   update() {
     this.player.update();
+
+    for (const obj of this.depthSortArray) {
+      obj.depth = obj.y;
+    }
   }
 
   /**
@@ -113,6 +112,7 @@ export default class MainScene extends Phaser.Scene {
         );
         this.turnManager.add(enemy);
         this.enemies.push(enemy);
+        this.depthSortArray.push(enemy.sprite);
       }
     });
   }
