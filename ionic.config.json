@@ -1,7 +1,0 @@
-{
-  "name": "mystery-dungeon",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "custom"
-}

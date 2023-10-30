@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Mystery Dungeon</string>
-    <string name="title_activity_main">Mystery Dungeon</string>
-    <string name="package_name">com.makoren.MysteryDungeon</string>
-    <string name="custom_url_scheme">com.makoren.MysteryDungeon</string>
-</resources>

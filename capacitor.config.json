@@ -1,8 +1,0 @@
-{
-  "appId": "com.makoren.MysteryDungeon",
-  "appName": "Mystery Dungeon",
-  "webDir": "dist",
-  "server": {
-    "androidScheme": "https"
-  }
-}
