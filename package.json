@@ -6,12 +6,22 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ionic:build": "npm run build",
+    "ionic:serve": "npm run dev"
   },
   "devDependencies": {
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@capacitor/android": "5.5.1",
+    "@capacitor/app": "5.0.6",
+    "@capacitor/cli": "5.5.1",
+    "@capacitor/core": "5.5.1",
+    "@capacitor/haptics": "5.0.6",
+    "@capacitor/ios": "5.5.1",
+    "@capacitor/keyboard": "5.0.6",
+    "@capacitor/status-bar": "5.0.6",
     "pathfinding": "^0.4.18",
     "phaser": "^3.60.0"
   }
