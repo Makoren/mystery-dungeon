@@ -16,7 +16,8 @@ export default class BattleLog {
     this.panel.alpha = 0.1;
 
     for (let i = 0; i < 5; i++) {
-      const obj = scene.add.text(20, 20 + 24 * i, "");
+      const colour = i !== 0 ? "#aaaaaa" : "#ffffff";
+      const obj = scene.add.text(20, 20 + 24 * i, "", { color: colour });
       this.textObjects.push(obj);
     }
   }
