@@ -38,54 +38,34 @@ export default class VirtualJoystick {
 
     this.reposition(gameSize);
 
-    /**
-     * @private
-     */
+    /** @private */
     this.isDragging = false;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.originalPosX = this.bg.x;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.originalPosY = this.bg.y;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.touchStartPosX = this.originalPosX;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.touchStartPosY = this.originalPosY;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.currentTouchPosX = this.originalPosX;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.currentTouchPosY = this.originalPosY;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.joystickMovementX = 0;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.joystickMovementY = 0;
 
-    /**
-     * @private
-     */
+    /** @private */
     this.threshold = 100;
   }
 
@@ -107,10 +87,8 @@ export default class VirtualJoystick {
 
     this.zone.input.hitArea.setTo(0, 0, this.zone.width, this.zone.height);
 
-    if (this.originalPos) {
-      this.originalPos.x = this.bg.x;
-      this.originalPos.y = this.bg.y;
-    }
+    this.originalPosX = this.bg.x;
+    this.originalPosY = this.bg.y;
   }
 
   /**
